@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+   
+    <item
+        android:id="@+id/run"
+        android:icon="@drawable/ic_run"
+        android:orderInCategory="2"
+        android:showAsAction="always"
+        android:title="查看" />
+    <item
+        android:id="@+id/res"
+        android:icon="@drawable/ic_res"
+        android:orderInCategory="3"
+        android:showAsAction="always"
+        android:title="管理资源" />
+	
+    <item
+        android:id="@+id/about"
+        android:icon="@drawable/ic_about"
+        android:orderInCategory="5"
+        android:showAsAction="always"
+        android:title="关于" />
+</menu>
