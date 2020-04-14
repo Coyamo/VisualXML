@@ -824,7 +824,7 @@ public class ProxyAttributeSet {
                 return parseEnum(name, value);
             case "layout_width":
             case "layout_height": {
-                String va = parseEnum(name, value);
+                String va = parseEnum(name, value, "null");
                 if (va.equals("null")) {
                     return (int) parseUnitString2Px(value) + "";
                 }
@@ -838,7 +838,7 @@ public class ProxyAttributeSet {
     }
 
     private String parseEnum(String name, String value) {
-        return parseEnum(name, value, "null");
+        return parseEnum(name, value, value);
     }
 
     private String parseEnum(String name, String value, String def) {
