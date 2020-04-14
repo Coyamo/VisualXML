@@ -38,10 +38,6 @@ public class ProxyResources {
     }
 
     public static ProxyResources getInstance() {
-        instance.putDrawable("icon", "/storage/emulated/0/AppProjects/VisualXML/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png");
-        instance.putColor("red", "#ff0000");
-        instance.putString("hello", "hello world");
-        instance.putString("gollo", "testo strin");
         return instance;
     }
 
@@ -82,6 +78,8 @@ public class ProxyResources {
         } else if (reference.startsWith("@string/")) {
             if (stringMap.containsKey(name)) {
                 return stringMap.get(name);
+            } else {
+                debug.logE("找不到string" + reference);
             }
         }
         return reference;

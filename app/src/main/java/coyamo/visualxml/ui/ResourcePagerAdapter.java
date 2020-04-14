@@ -12,24 +12,21 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ResourcePagerAdapter extends PagerAdapter {
     private Context ctx;
-    private List<Map<String, String>> list;
     private List<ResourceListAdapter> adapters;
     private List<RecyclerView> views;
     private List<String> names;
 
-    public ResourcePagerAdapter(Context ctx, List<String> names, List<Map<String, String>> list) {
+    public ResourcePagerAdapter(Context ctx, List<String> names) {
         this.ctx = ctx;
-        this.list = list;
         this.names = names;
         adapters = new ArrayList<>();
         views = new ArrayList<>();
 
-        for (int i = 0; i < list.size(); i++) {
-            ResourceListAdapter adapter = new ResourceListAdapter(i, list.get(i));
+        for (int i = 0; i < names.size(); i++) {
+            ResourceListAdapter adapter = new ResourceListAdapter(ctx, i);
             RecyclerView rv = new RecyclerView(ctx);
             rv.setAdapter(adapter);
             rv.setLayoutManager(new LinearLayoutManager(ctx));
@@ -63,7 +60,7 @@ public class ResourcePagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return list.size();
+        return names.size();
     }
 
     @Override

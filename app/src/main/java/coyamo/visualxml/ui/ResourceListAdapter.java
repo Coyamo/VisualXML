@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import coyamo.visualxml.R;
+import coyamo.visualxml.proxy.ProxyResources;
 import coyamo.visualxml.utils.Utils;
 
 public class ResourceListAdapter extends RecyclerView.Adapter<ResourceListAdapter.ViewHolder> {
@@ -29,14 +30,25 @@ public class ResourceListAdapter extends RecyclerView.Adapter<ResourceListAdapte
     private int type;
     private Context ctx;
 
-    public ResourceListAdapter(int type, Map<String, String> map) {
-        this.map = map;
+    public ResourceListAdapter(Context ctx, int type) {
+        this.ctx = ctx;
         this.type = type;
+        switch (type) {
+            case 0:
+                map = ProxyResources.getInstance().getStringMap();
+                break;
+            case 1:
+                map = ProxyResources.getInstance().getDrawableMap();
+                break;
+            case 2:
+                map = ProxyResources.getInstance().getColorMap();
+                break;
+        }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
-        ctx = parent.getContext();
+
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.resource_item, parent, false);
         final ViewHolder holder = new ViewHolder(view);

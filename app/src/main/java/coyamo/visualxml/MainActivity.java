@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import coyamo.visualxml.proxy.ProxyResources;
 import coyamo.visualxml.ui.ResourcePagerAdapter;
@@ -75,12 +74,8 @@ public class MainActivity extends AppCompatActivity {
         names.add("Drawable");
         names.add("Color");
 
-        List<Map<String, String>> maps = new ArrayList<>();
-        maps.add(resources.getStringMap());
-        maps.add(resources.getDrawableMap());
-        maps.add(resources.getColorMap());
 
-        final ResourcePagerAdapter adapter = new ResourcePagerAdapter(this, names, maps);
+        final ResourcePagerAdapter adapter = new ResourcePagerAdapter(this, names);
         final ViewPager pager = findViewById(R.id.pager);
         tab.setupWithViewPager(pager);
         pager.setAdapter(adapter);
