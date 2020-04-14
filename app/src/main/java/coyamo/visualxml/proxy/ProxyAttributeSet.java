@@ -683,19 +683,9 @@ public class ProxyAttributeSet
                     case "textAppearance": {
 							try
 							{
-								int attrid;
-								if (value.startsWith("?android:attr/"))
-								{
-									attrid = resource.attr2style(value);
+								int attrid = resource.getRes(value);
+								Utils.invoke(v, "setTextAppearance", new Class[]{Context.class, int.class}, ctx, attrid);
 
-									Utils.invoke(v, "setTextAppearance", new Class[]{Context.class, int.class}, ctx, attrid);
-
-								}
-								else if (value.startsWith("@android:style/"))
-								{
-									attrid = resource.getRes(value);
-									Utils.invoke(v, "setTextAppearance", new Class[]{Context.class, int.class}, ctx, attrid);
-								}
 							}
 							catch (Exception e)
 							{

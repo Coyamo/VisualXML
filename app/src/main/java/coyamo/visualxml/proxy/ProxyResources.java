@@ -56,25 +56,26 @@ public class ProxyResources {
 	 */
 
 	//不太清楚具体
-    public int attr2style(String attr) {
-        if (attr.startsWith("@android:style/")) return getRes(attr);
+	//获取套娃引用的最终值
+    public int getRes(String attr) {
+        if (attr.startsWith("@android:style/")) return getStyle(attr);
         int id = getAttr(attr);
         Resources.Theme theme = ctx.getTheme();
         TypedValue typeValue = new TypedValue();
         if (theme.resolveAttribute(id, typeValue, true)) {
             return typeValue.data;
         }
-        debug.logE("attr2style err："+attr);
+        debug.logE("getRes err："+attr);
         return -1;
     }
 
-	//获取套娃引用的最终值
-    public int getRes(String res) {
-        if (res.startsWith("@android:style/")) {
-            String name = parseReferName(res);
+	
+    public int getStyle(String style) {
+        if (style.startsWith("@android:style/")) {
+            String name = parseReferName(style);
             return getSystemResourceId(android.R.style.class, name.replace(".", "_"));
         }
-        debug.logE("找不到 res 值："+res);
+        debug.logE("找不到 style 值："+style);
         return -1;
     }
 
