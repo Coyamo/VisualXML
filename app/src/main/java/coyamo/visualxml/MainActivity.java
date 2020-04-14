@@ -1,54 +1,97 @@
 package coyamo.visualxml;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import coyamo.visualxml.proxy.ProxyResources;
-import androidx.recyclerview.widget.*;
-import coyamo.visualxml.ui.*;
-import android.widget.*;
+import coyamo.visualxml.ui.ResourcePagerAdapter;
+import coyamo.visualxml.ui.SignAdapter;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     private EditText editor;
-	private RecyclerView signlist;
-
+    private RecyclerView signlist;
+    private ProxyResources resources;
+    private DrawerLayout drawer;
+    private LinearLayout drawerSub;
+    private Button add;
+    private TabLayout tab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ProxyResources.init(this);
-		
-       
-        editor = findViewById(R.id.editor);
-		signlist=findViewById(R.id.sign_list);
 
-        ActionBar actionBar = getActionBar();
+        tab = findViewById(R.id.tablayout);
+        add = findViewById(R.id.title_add);
+        drawerSub = findViewById(R.id.main_drawer_sub);
+        drawer = findViewById(R.id.maindrawerLayout);
+        editor = findViewById(R.id.editor);
+        signlist = findViewById(R.id.sign_list);
+        resources = ProxyResources.getInstance();
+
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Raw XML");
 
-		signlist.setAdapter(new SignAdapter(editor));
-		LinearLayoutManager llm=new LinearLayoutManager(this);
-		llm.setOrientation(LinearLayoutManager.HORIZONTAL);
-		signlist.setLayoutManager(llm);
-		
+        signlist.setAdapter(new SignAdapter(editor));
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.HORIZONTAL);
+        signlist.setLayoutManager(llm);
+
         try {
-           InputStream ins= getAssets().open("test.xml");
-           byte[] b=new byte[ins.available()];
-           ins.read(b);
-           editor.setText(new String(b));
-           ins.close();
+            InputStream ins = getAssets().open("test.xml");
+            byte[] b = new byte[ins.available()];
+            ins.read(b);
+            editor.setText(new String(b));
+            ins.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+
+        final List<String> names = new ArrayList<>();
+        names.add("String");
+        names.add("Drawable");
+        names.add("Color");
+
+        List<Map<String, String>> maps = new ArrayList<>();
+        maps.add(resources.getStringMap());
+        maps.add(resources.getDrawableMap());
+        maps.add(resources.getColorMap());
+
+        final ResourcePagerAdapter adapter = new ResourcePagerAdapter(this, names, maps);
+        final ViewPager pager = findViewById(R.id.pager);
+        tab.setupWithViewPager(pager);
+        pager.setAdapter(adapter);
+
+
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adapter.addData(pager.getCurrentItem());
+            }
+        });
     }
 
     @Override
@@ -60,21 +103,18 @@ public class MainActivity extends Activity {
                 startActivity(i);
                 break;
             case R.id.res:
-                new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("暂未完成")
-                        .setMessage("用于处理对资源文件id的映射")
-                        .setPositiveButton("确定", null)
-                        .show();
+                if (drawer.isDrawerOpen(drawerSub)) drawer.closeDrawer(drawerSub);
+                else drawer.openDrawer(drawerSub);
                 break;
             case R.id.about:
                 new AlertDialog.Builder(MainActivity.this)
                         .setTitle("关于")
-                        .setMessage("硬解Xml，可以解析大部分View 和属性。可以调用系统color和drawable,style,attr（其他还没有弄),代码有点辣眼睛 凑合着看\nರ_ರ ...")
+                        .setMessage("硬解Xml，可以解析大部分View和属性。可以调用大部分系统color、drawable、style、attr、string,代码有点辣眼睛 凑合着看\nರ_ರ ...")
                         .setPositiveButton("确定", null)
                         .show();
                 break;
-            
-				
+
+
         }
         return super.onOptionsItemSelected(item);
     }

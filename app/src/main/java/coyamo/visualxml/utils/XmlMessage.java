@@ -1,11 +1,12 @@
 package coyamo.visualxml.utils;
 
 public class XmlMessage {
-    public static final int TYPE_DEBUG=0;
-    public static final int TYPE_ERROR=1;
-    public static final int TYPE_WARN=2;
+    public static final int TYPE_DEBUG = 0;
+    public static final int TYPE_ERROR = 1;
+    public static final int TYPE_WARN = 2;
 
-    private int type=TYPE_DEBUG;
+    private int type = TYPE_DEBUG;
+    private String message;
 
     public int getType() {
         return type;
@@ -22,6 +23,4 @@ public class XmlMessage {
     public void setMessage(String message) {
         this.message = message;
     }
-
-    private String message;
 }

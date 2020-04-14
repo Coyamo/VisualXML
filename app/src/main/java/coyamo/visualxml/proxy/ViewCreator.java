@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
 
 import java.lang.reflect.Constructor;
 
@@ -24,7 +24,7 @@ public class ViewCreator {
             "android.app."
     };
 
-    public static View create(@NotNull String name, @NotNull Context ctx) {
+    public static View create(@NonNull String name, @NonNull Context ctx) {
         if (name.startsWith("coyamo.visualxml.")) return createDefault(ctx, name);
         View v = null;
         if (isFullPackage(name)) v = _create(name, ctx);
@@ -39,7 +39,7 @@ public class ViewCreator {
         return v;
     }
 
-    public static View create(@NotNull String name, @NotNull Context ctx, int defStyle) {
+    public static View create(@NonNull String name, @NonNull Context ctx, int defStyle) {
         if (name.startsWith("coyamo.visualxml.")) return createDefault(ctx, name);
         View v = null;
         if (isFullPackage(name)) v = _create(name, ctx, defStyle);
@@ -54,13 +54,13 @@ public class ViewCreator {
         return v;
     }
 
-    private static View createDefault(@NotNull Context ctx, String text) {
+    private static View createDefault(@NonNull Context ctx, String text) {
         DefaultView v = new DefaultView(ctx);
         v.setDisplayText(text);
         return v;
     }
 
-    private static View _create(@NotNull String name, @NotNull Context ctx) {
+    private static View _create(@NonNull String name, @NonNull Context ctx) {
         try {
             Class<?> clazz = Class.forName(name);
             Constructor<?> con = clazz.getDeclaredConstructor(Context.class);
@@ -71,7 +71,7 @@ public class ViewCreator {
         return null;
     }
 
-    private static View _create(@NotNull String cla, @NotNull Context ctx, int defstyle) {
+    private static View _create(@NonNull String cla, @NonNull Context ctx, int defstyle) {
         try {
             Class<?> clazz = Class.forName(cla);
             Constructor<?> con = clazz.getDeclaredConstructor(Context.class, AttributeSet.class, int.class);
@@ -83,7 +83,7 @@ public class ViewCreator {
     }
 
 
-    private static View createSpecial(@NotNull String tag, @NotNull Context ctx) {
+    private static View createSpecial(@NonNull String tag, @NonNull Context ctx) {
         switch (tag) {
             case TAG_INCLUDE:
                 return createDefault(ctx, tag);
@@ -93,7 +93,7 @@ public class ViewCreator {
         return null;
     }
 
-    private static boolean isFullPackage(@NotNull String s) {
+    private static boolean isFullPackage(@NonNull String s) {
         return s.contains(".");
     }
 }

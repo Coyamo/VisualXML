@@ -1,7 +1,6 @@
 package coyamo.visualxml.ui;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +16,12 @@ import coyamo.visualxml.R;
 import coyamo.visualxml.utils.MessageArray;
 import coyamo.visualxml.utils.XmlMessage;
 
-public class ErrorMessageAdapter extends RecyclerView.Adapter<ErrorMessageAdapter.ViewHolder>{
-    private List<XmlMessage> msglist=new ArrayList<>();
+public class ErrorMessageAdapter extends RecyclerView.Adapter<ErrorMessageAdapter.ViewHolder> {
+    private List<XmlMessage> msglist = new ArrayList<>();
     private MessageArray ma;
-    public ErrorMessageAdapter(){
-        ma=MessageArray.getInstanse();
+
+    public ErrorMessageAdapter() {
+        ma = MessageArray.getInstanse();
         ma.setListener(new MessageArray.OnNewMessageListener() {
             @Override
             public void onNew(List<XmlMessage> list, XmlMessage m) {
@@ -30,18 +30,6 @@ public class ErrorMessageAdapter extends RecyclerView.Adapter<ErrorMessageAdapte
                 notifyDataSetChanged();
             }
         });
-    }
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        View item;
-        ImageView icon;
-        TextView text;
-
-        public ViewHolder(View view) {
-            super(view);
-            item = view;
-            icon = view.findViewById(R.id.icon);
-            text = view.findViewById(R.id.text);
-        }
     }
 
     @Override
@@ -61,7 +49,7 @@ public class ErrorMessageAdapter extends RecyclerView.Adapter<ErrorMessageAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         XmlMessage fruit = msglist.get(position);
-        switch (fruit.getType()){
+        switch (fruit.getType()) {
             case XmlMessage.TYPE_DEBUG:
                 holder.text.setTextColor(Color.BLACK);
                 holder.icon.setImageResource(R.drawable.ic_debug2);
@@ -82,6 +70,19 @@ public class ErrorMessageAdapter extends RecyclerView.Adapter<ErrorMessageAdapte
     @Override
     public int getItemCount() {
         return msglist.size();
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        View item;
+        ImageView icon;
+        TextView text;
+
+        public ViewHolder(View view) {
+            super(view);
+            item = view;
+            icon = view.findViewById(R.id.icon);
+            text = view.findViewById(R.id.text);
+        }
     }
 
 }

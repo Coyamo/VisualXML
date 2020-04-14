@@ -26,12 +26,9 @@ public class ProxyResources {
     private MessageArray debug = MessageArray.getInstanse();
     private Map<String, String> drawableMap = new HashMap<>();
     private Map<String, Integer> viewIdMap = new HashMap<>();
-    private Map<String, Integer> colorMap = new HashMap<>();
+    private Map<String, String> colorMap = new HashMap<>();
     private Map<String, String> stringMap = new HashMap<>();
-
-
     private Context ctx;
-
     private ProxyResources(Context ctx) {
         this.ctx = ctx;
     }
@@ -41,7 +38,27 @@ public class ProxyResources {
     }
 
     public static ProxyResources getInstance() {
+        instance.putDrawable("icon", "/storage/emulated/0/AppProjects/VisualXML/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png");
+        instance.putColor("red", "#ff0000");
+        instance.putString("hello", "hello world");
+        instance.putString("gollo", "testo strin");
         return instance;
+    }
+
+    public Map<String, String> getDrawableMap() {
+        return drawableMap;
+    }
+
+    public Map<String, Integer> getViewIdMap() {
+        return viewIdMap;
+    }
+
+    public Map<String, String> getColorMap() {
+        return colorMap;
+    }
+
+    public Map<String, String> getStringMap() {
+        return stringMap;
     }
 
     public void reset() {
@@ -49,9 +66,6 @@ public class ProxyResources {
         viewIdMap.clear();
         colorMap.clear();
         stringMap.clear();
-
-        //instance.putColor("test", Color.RED);
-
     }
 
     public void putString(String name, String text) {
@@ -164,12 +178,20 @@ public class ProxyResources {
             if (drawableMap.containsKey(name)) {
                 return DrawableWrapper.createFromPath(drawableMap.get(name));
             }
+        } else if (reference.startsWith("@android:color/")) {
+            int id = getSystemResourceId(android.R.color.class, name);
+            if (id != -1) {
+                return new ColorDrawable(ctx.getResources().getColor(id));
+            }
+        } else if (reference.startsWith("@color/")) {
+            if (colorMap.containsKey(name)) {
+                return new ColorDrawable(Color.parseColor(colorMap.get(name)));
+            }
         } else if (reference.startsWith("?android:attr/")) {
             int i = getAttr(reference);
             TypedArray a = ctx.obtainStyledAttributes(new int[]{i});
             Drawable d = a.getDrawable(a.getIndex(0));
             a.recycle();
-
             return d;
         }
         debug.logE("找不到 Drawable ：" + reference);
@@ -188,11 +210,11 @@ public class ProxyResources {
             }
         } else if (reference.startsWith("@color/")) {
             if (colorMap.containsKey(name)) {
-                return colorMap.get(name);
+                return Color.parseColor(colorMap.get(name));
             }
         }
         debug.logE("找不到 Color ：" + reference);
-        return Color.BLACK;
+        return Color.TRANSPARENT;
     }
 
     public String parseReferName(String reference) {
@@ -208,7 +230,8 @@ public class ProxyResources {
         drawableMap.put(name, drawableFilePath);
     }
 
-    public void putColor(String name, int color) {
+    //#ffffff 类型的颜色
+    public void putColor(String name, String color) {
         colorMap.put(name, color);
     }
 

@@ -1,64 +1,64 @@
 package coyamo.visualxml.ui;
 
-import android.graphics.*;
-import android.view.*;
-import android.widget.*;
-import androidx.recyclerview.widget.*;
-import coyamo.visualxml.*;
-import coyamo.visualxml.ui.*;
-import coyamo.visualxml.utils.*;
-import java.util.*;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 
-public class SignAdapter extends RecyclerView.Adapter<SignAdapter.ViewHolder>
-{
-    private String sign[]={"\t","<",">","/","=","\"",":","@","+","(",")",";",",",".","?","|","\\","&","!","[","]","{","}","_","-"};
+import androidx.recyclerview.widget.RecyclerView;
 
-	private EditText editor;
-    public SignAdapter(EditText editor){
-		this.editor=editor;
-        
-    }
-	
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView text;
+import coyamo.visualxml.utils.Utils;
 
-        public ViewHolder(View view) {
-            super(view);
-            
-            text = (TextView) view;
-        }
+public class SignAdapter extends RecyclerView.Adapter<SignAdapter.ViewHolder> {
+    private String sign[] = {"\t", "<", ">", "/", "=", "\"", ":", "@", "+", "(", ")", ";", ",", ".", "?", "|", "\\", "&", "!", "[", "]", "{", "}", "_", "-"};
+
+    private EditText editor;
+
+    public SignAdapter(EditText editor) {
+        this.editor = editor;
+
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        TextView tv=new TextView(parent.getContext());
-		int size=(int)Utils.dp2px(parent.getContext(),5);
-		ViewGroup.MarginLayoutParams lp=new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT,ViewGroup.MarginLayoutParams.MATCH_PARENT);
-		lp.setMargins(size,size,size,size);
-		tv.setLayoutParams(lp);
-		//tv.setPadding(size,size,size,size);
-		tv.setTextSize(20);
-		tv.setMinWidth(size*8);
-		tv.setMinHeight(size*4);
-		final ViewHolder holder = new ViewHolder(tv);
+        TextView tv = new TextView(parent.getContext());
+        int size = (int) Utils.dp2px(parent.getContext(), 5);
+        ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.MATCH_PARENT);
+        lp.setMargins(size, size, size, size);
+        tv.setLayoutParams(lp);
+        //tv.setPadding(size,size,size,size);
+        tv.setTextSize(20);
+        tv.setMinWidth(size * 8);
+        tv.setMinHeight(size * 4);
+        final ViewHolder holder = new ViewHolder(tv);
         holder.text.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					editor.getText().insert(editor.getSelectionStart(),(sign[holder.getPosition()]));
-				}
-			});
+            @Override
+            public void onClick(View view) {
+                editor.getText().insert(editor.getSelectionStart(), (sign[holder.getPosition()]));
+            }
+        });
 
         return holder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.text.setText(position==0?"TAB": sign[position]);
+        holder.text.setText(position == 0 ? "TAB" : sign[position]);
     }
 
     @Override
     public int getItemCount() {
         return sign.length;
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView text;
+
+        public ViewHolder(View view) {
+            super(view);
+
+            text = (TextView) view;
+        }
     }
 
 }

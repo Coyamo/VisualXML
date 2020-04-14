@@ -1,15 +1,16 @@
 package coyamo.visualxml.utils;
 
-import android.util.*;
-import android.view.View;
+import android.content.Context;
+import android.util.TypedValue;
 
-import java.lang.reflect.*;
-import android.content.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public class Utils {
-	public static float dp2px(Context ctx,int dp){
-		return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dp,ctx.getResources().getDisplayMetrics());
-	}
+    public static float dp2px(Context ctx, int dp) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, ctx.getResources().getDisplayMetrics());
+    }
+
     public static boolean isColor(String color) {
         return color.matches("^#([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$");
     }

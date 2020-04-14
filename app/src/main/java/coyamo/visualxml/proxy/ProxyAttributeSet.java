@@ -9,7 +9,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
+
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -19,17 +20,11 @@ import coyamo.visualxml.utils.MessageArray;
 import coyamo.visualxml.utils.Utils;
 
 
-public class ProxyAttributeSet
-{
-    private MessageArray debug=MessageArray.getInstanse();
-	//attr中的枚举值与实际需要的参数的映射
+public class ProxyAttributeSet {
+    //attr中的枚举值与实际需要的参数的映射
     private static Map<String, Map<String, String>> enumMap = new HashMap<>();
     //attr中flag值的映射（可以a|b|c这么设置的那种）
-	private static Map<String, Map<String, Integer>> flagMap = new HashMap<>();
-
-	//因为映射的值规律有点蜜汁
-	//还没有想到合适的文件结构储存这些关系
-	//只能写死在代码里面(•́ω•̀ ٥)
+    private static Map<String, Map<String, Integer>> flagMap = new HashMap<>();
 
     static {
         Map<String, String> orientationMap = new HashMap<>();
@@ -83,7 +78,6 @@ public class ProxyAttributeSet
         alignmentModeMap.put("alignMargins", "1");
 
 
-
         Map<String, String> scaleTypeMap = new HashMap<>();
         enumMap.put("scaleType", scaleTypeMap);
         scaleTypeMap.put("matrix", "MATRIX");
@@ -97,6 +91,10 @@ public class ProxyAttributeSet
 
 
     }
+
+    //因为映射的值规律有点蜜汁
+    //还没有想到合适的文件结构储存这些关系
+    //只能写死在代码里面(•́ω•̀ ٥)
 
     static {
 
@@ -163,52 +161,46 @@ public class ProxyAttributeSet
         inputTypeMap.put("time", 0x00000024);
     }
 
+    private MessageArray debug = MessageArray.getInstanse();
     private XmlPullParser mParser;
     private Context ctx;
     private ProxyResources resource;
-	/*
-	 这里没有对命名空间进行详细的解析
-	 */
+    /*
+     这里没有对命名空间进行详细的解析
+     */
     private String androidNS = "http://schemas.android.com/apk/res/android";
 
-    public ProxyAttributeSet(XmlPullParser parser, Context ctx)
-	{
+    public ProxyAttributeSet(XmlPullParser parser, Context ctx) {
         this.ctx = ctx;
         mParser = parser;
         resource = ProxyResources.getInstance();
     }
 
-    public void setTo(final View v)
-	{
+    public void setTo(final View v) {
 
-        if (hasAttribute("id"))
-		{
+        if (hasAttribute("id")) {
             resource.registerViewId(v, getAttributeValue(androidNS, "id"));
         }
         //除了几个特殊的 其他view必须要有
-        if (!hasAttribute("layout_width"))
-		{
+        if (!hasAttribute("layout_width")) {
             Utils.setField(v.getLayoutParams(), "width", -2);
             if (!mParser.getName().equals("include"))
                 debug.logE(mParser.getLineNumber() + "行 " + mParser.getColumnNumber() + "列：" + mParser.getName() + " layout_width 不能忽略，已经自动设置为wrap_content。");
 
         }
-        if (!hasAttribute("layout_height"))
-		{
+        if (!hasAttribute("layout_height")) {
             Utils.setField(v.getLayoutParams(), "height", -2);
             if (!mParser.getName().equals("include"))
                 debug.logE(mParser.getLineNumber() + "行 " + mParser.getColumnNumber() + "列：" + mParser.getName() + " layout_height 不能忽略，已经自动设置为wrap_content。");
 
         }
 
-        for (int i = 0; i < getAttributeCount(); i++)
-		{
+        for (int i = 0; i < getAttributeCount(); i++) {
             String name = getAttributeName(i);
             final String value = getAttributeValue(i);
             //命名空间
             if (mParser.getAttributeNamespace(i).equals(androidNS))
-                switch (name)
-				{
+                switch (name) {
                     case "layout_centerInParent":
                         if (Boolean.parseBoolean(value))
                             Utils.invoke(v.getLayoutParams(), "addRule", new Class[]{int.class}, RelativeLayout.CENTER_IN_PARENT);
@@ -415,58 +407,58 @@ public class ProxyAttributeSet
                         Utils.invoke(v, "setTextSize", new Class[]{int.class, float.class}, TypedValue.COMPLEX_UNIT_PX, Float.parseFloat(value));
                         continue;
                     case "padding": {
-							int p = (int) Float.parseFloat(value);
-							Utils.invoke(v, "setPadding", new Class[]{int.class, int.class, int.class, int.class}, p, p, p, p);
-							continue;
-						}
+                        int p = (int) Float.parseFloat(value);
+                        Utils.invoke(v, "setPadding", new Class[]{int.class, int.class, int.class, int.class}, p, p, p, p);
+                        continue;
+                    }
                     case "paddingLeft": {
-							if (hasAttribute("padding")) continue;
-							int top = (int) Utils.invoke(v, "getPaddingTop", null);
-							int right = (int) Utils.invoke(v, "getPaddingRight", null);
-							int bottom = (int) Utils.invoke(v, "getPaddingBottom", null);
-							Utils.invoke(v, "setPadding", new Class[]{int.class, int.class, int.class, int.class}, (int) Float.parseFloat(value), top, right, bottom);
-							continue;
-						}
+                        if (hasAttribute("padding")) continue;
+                        int top = (int) Utils.invoke(v, "getPaddingTop", null);
+                        int right = (int) Utils.invoke(v, "getPaddingRight", null);
+                        int bottom = (int) Utils.invoke(v, "getPaddingBottom", null);
+                        Utils.invoke(v, "setPadding", new Class[]{int.class, int.class, int.class, int.class}, (int) Float.parseFloat(value), top, right, bottom);
+                        continue;
+                    }
                     case "paddingStart": {
-							if (hasAttribute("padding")) continue;
-							int top = (int) Utils.invoke(v, "getPaddingTop", null);
-							int bottom = (int) Utils.invoke(v, "getPaddingBottom", null);
-							int end = (int) Utils.invoke(v, "getPaddingEnd", null);
-							Utils.invoke(v, "setPaddingRelative", new Class[]{int.class, int.class, int.class, int.class}, (int) Float.parseFloat(value), top, end, bottom);
-							continue;
-						}
+                        if (hasAttribute("padding")) continue;
+                        int top = (int) Utils.invoke(v, "getPaddingTop", null);
+                        int bottom = (int) Utils.invoke(v, "getPaddingBottom", null);
+                        int end = (int) Utils.invoke(v, "getPaddingEnd", null);
+                        Utils.invoke(v, "setPaddingRelative", new Class[]{int.class, int.class, int.class, int.class}, (int) Float.parseFloat(value), top, end, bottom);
+                        continue;
+                    }
                     case "paddingRight": {
-							if (hasAttribute("padding")) continue;
-							int left = (int) Utils.invoke(v, "getPaddingLeft", null);
-							int top = (int) Utils.invoke(v, "getPaddingTop", null);
-							int bottom = (int) Utils.invoke(v, "getPaddingBottom", null);
-							Utils.invoke(v, "setPadding", new Class[]{int.class, int.class, int.class, int.class}, left, top, (int) Float.parseFloat(value), bottom);
-							continue;
-						}
+                        if (hasAttribute("padding")) continue;
+                        int left = (int) Utils.invoke(v, "getPaddingLeft", null);
+                        int top = (int) Utils.invoke(v, "getPaddingTop", null);
+                        int bottom = (int) Utils.invoke(v, "getPaddingBottom", null);
+                        Utils.invoke(v, "setPadding", new Class[]{int.class, int.class, int.class, int.class}, left, top, (int) Float.parseFloat(value), bottom);
+                        continue;
+                    }
                     case "paddingEnd": {
-							if (hasAttribute("padding")) continue;
-							int top = (int) Utils.invoke(v, "getPaddingTop", null);
-							int bottom = (int) Utils.invoke(v, "getPaddingBottom", null);
-							int start = (int) Utils.invoke(v, "getPaddingStart", null);
-							Utils.invoke(v, "setPaddingRelative", new Class[]{int.class, int.class, int.class, int.class}, start, top, (int) Float.parseFloat(value), bottom);
-							continue;
-						}
+                        if (hasAttribute("padding")) continue;
+                        int top = (int) Utils.invoke(v, "getPaddingTop", null);
+                        int bottom = (int) Utils.invoke(v, "getPaddingBottom", null);
+                        int start = (int) Utils.invoke(v, "getPaddingStart", null);
+                        Utils.invoke(v, "setPaddingRelative", new Class[]{int.class, int.class, int.class, int.class}, start, top, (int) Float.parseFloat(value), bottom);
+                        continue;
+                    }
                     case "paddingTop": {
-							if (hasAttribute("padding")) continue;
-							int left = (int) Utils.invoke(v, "getPaddingLeft", null);
-							int right = (int) Utils.invoke(v, "getPaddingRight", null);
-							int bottom = (int) Utils.invoke(v, "getPaddingBottom", null);
-							Utils.invoke(v, "setPadding", new Class[]{int.class, int.class, int.class, int.class}, left, (int) Float.parseFloat(value), right, bottom);
-							continue;
-						}
+                        if (hasAttribute("padding")) continue;
+                        int left = (int) Utils.invoke(v, "getPaddingLeft", null);
+                        int right = (int) Utils.invoke(v, "getPaddingRight", null);
+                        int bottom = (int) Utils.invoke(v, "getPaddingBottom", null);
+                        Utils.invoke(v, "setPadding", new Class[]{int.class, int.class, int.class, int.class}, left, (int) Float.parseFloat(value), right, bottom);
+                        continue;
+                    }
                     case "paddingBottom": {
-							if (hasAttribute("padding")) continue;
-							int left = (int) Utils.invoke(v, "getPaddingLeft", null);
-							int top = (int) Utils.invoke(v, "getPaddingTop", null);
-							int right = (int) Utils.invoke(v, "getPaddingRight", null);
-							Utils.invoke(v, "setPadding", new Class[]{int.class, int.class, int.class, int.class}, left, top, right, (int) Float.parseFloat(value));
-							continue;
-						}
+                        if (hasAttribute("padding")) continue;
+                        int left = (int) Utils.invoke(v, "getPaddingLeft", null);
+                        int top = (int) Utils.invoke(v, "getPaddingTop", null);
+                        int right = (int) Utils.invoke(v, "getPaddingRight", null);
+                        Utils.invoke(v, "setPadding", new Class[]{int.class, int.class, int.class, int.class}, left, top, right, (int) Float.parseFloat(value));
+                        continue;
+                    }
                     case "rotation":
                         Utils.invoke(v, "setRotation", new Class[]{float.class}, Float.parseFloat(value));
                         continue;
@@ -483,39 +475,39 @@ public class ProxyAttributeSet
                         Utils.invoke(v, "setScaleY", new Class[]{float.class}, Float.parseFloat(value));
                         continue;
                     case "shadowColor": {
-							int color = resource.getColor(value);
-							float dx = (float) Utils.invoke(v, "getShadowDx", null);
-							float dy = (float) Utils.invoke(v, "getShadowDy", null);
-							float r = (float) Utils.invoke(v, "getShadowRadius", null);
-							Utils.invoke(v, "setShadowLayer", new Class[]{float.class, float.class, float.class, int.class}, r, dx, dy, color);
-							continue;
-						}
+                        int color = resource.getColor(value);
+                        float dx = (float) Utils.invoke(v, "getShadowDx", null);
+                        float dy = (float) Utils.invoke(v, "getShadowDy", null);
+                        float r = (float) Utils.invoke(v, "getShadowRadius", null);
+                        Utils.invoke(v, "setShadowLayer", new Class[]{float.class, float.class, float.class, int.class}, r, dx, dy, color);
+                        continue;
+                    }
 
                     case "shadowDx": {
-							int color = (int) Utils.invoke(v, "getShadowColor", null);
-							float dx = Float.parseFloat(value);
-							float dy = (float) Utils.invoke(v, "getShadowDy", null);
-							float r = (float) Utils.invoke(v, "getShadowRadius", null);
-							Utils.invoke(v, "setShadowLayer", new Class[]{float.class, float.class, float.class, int.class}, r, dx, dy, color);
-							continue;
-						}
+                        int color = (int) Utils.invoke(v, "getShadowColor", null);
+                        float dx = Float.parseFloat(value);
+                        float dy = (float) Utils.invoke(v, "getShadowDy", null);
+                        float r = (float) Utils.invoke(v, "getShadowRadius", null);
+                        Utils.invoke(v, "setShadowLayer", new Class[]{float.class, float.class, float.class, int.class}, r, dx, dy, color);
+                        continue;
+                    }
 
                     case "shadowDy": {
-							int color = (int) Utils.invoke(v, "getShadowColor", null);
-							float dx = (float) Utils.invoke(v, "getShadowDx", null);
-							float dy = Float.parseFloat(value);
-							float r = (float) Utils.invoke(v, "getShadowRadius", null);
-							Utils.invoke(v, "setShadowLayer", new Class[]{float.class, float.class, float.class, int.class}, r, dx, dy, color);
-							continue;
-						}
+                        int color = (int) Utils.invoke(v, "getShadowColor", null);
+                        float dx = (float) Utils.invoke(v, "getShadowDx", null);
+                        float dy = Float.parseFloat(value);
+                        float r = (float) Utils.invoke(v, "getShadowRadius", null);
+                        Utils.invoke(v, "setShadowLayer", new Class[]{float.class, float.class, float.class, int.class}, r, dx, dy, color);
+                        continue;
+                    }
                     case "shadowRadius": {
-							int color = (int) Utils.invoke(v, "getShadowColor", null);
-							float dx = (float) Utils.invoke(v, "getShadowDx", null);
-							float dy = (float) Utils.invoke(v, "getShadowDy", null);
-							float r = Float.parseFloat(value);
-							Utils.invoke(v, "setShadowLayer", new Class[]{float.class, float.class, float.class, int.class}, r, dx, dy, color);
-							continue;
-						}
+                        int color = (int) Utils.invoke(v, "getShadowColor", null);
+                        float dx = (float) Utils.invoke(v, "getShadowDx", null);
+                        float dy = (float) Utils.invoke(v, "getShadowDy", null);
+                        float r = Float.parseFloat(value);
+                        Utils.invoke(v, "setShadowLayer", new Class[]{float.class, float.class, float.class, int.class}, r, dx, dy, color);
+                        continue;
+                    }
                     case "translationX":
                         Utils.invoke(v, "setTranslationX", new Class[]{float.class}, Float.parseFloat(value));
                         continue;
@@ -527,10 +519,10 @@ public class ProxyAttributeSet
                         continue;
                         //case "textScaleY":
                     case "typeface": {
-							Typeface tf = (Typeface) Utils.getFiledValueFromClass(Typeface.class, value);
-							Utils.invoke(v, "setTypeface", new Class[]{Typeface.class}, tf);
-							continue;
-						}
+                        Typeface tf = (Typeface) Utils.getFiledValueFromClass(Typeface.class, value);
+                        Utils.invoke(v, "setTypeface", new Class[]{Typeface.class}, tf);
+                        continue;
+                    }
                     case "ellipsize":
                         Utils.invoke(v, "setEllipsize", new Class[]{TextUtils.TruncateAt.class}, TextUtils.TruncateAt.valueOf(value));
                         continue;
@@ -554,16 +546,16 @@ public class ProxyAttributeSet
                         continue;
                     case "textOff": {
                         Utils.invoke(v, "setTextOff", new Class[]{CharSequence.class}, resource.getString(value));
-							boolean b = (boolean) Utils.invoke(v, "isChecked", null);
-							Utils.invoke(v, "setChecked", new Class[]{boolean.class}, b);
-							continue;
-						}
+                        boolean b = (boolean) Utils.invoke(v, "isChecked", null);
+                        Utils.invoke(v, "setChecked", new Class[]{boolean.class}, b);
+                        continue;
+                    }
                     case "textOn": {
                         Utils.invoke(v, "setTextOn", new Class[]{CharSequence.class}, resource.getString(value));
-							boolean b = (boolean) Utils.invoke(v, "isChecked", null);
-							Utils.invoke(v, "setChecked", new Class[]{boolean.class}, b);
-							continue;
-						}
+                        boolean b = (boolean) Utils.invoke(v, "isChecked", null);
+                        Utils.invoke(v, "setChecked", new Class[]{boolean.class}, b);
+                        continue;
+                    }
                     case "enabled":
                         if (!Boolean.parseBoolean(value))
                             Utils.invoke(v, "setAlpha", new Class[]{float.class}, 0.3f);
@@ -672,16 +664,16 @@ public class ProxyAttributeSet
                         Utils.invoke(v, "setMeasureWithLargestChildEnabled", new Class[]{boolean.class}, Boolean.parseBoolean(value));
                         continue;
                     case "textStyle": {
-							int style = parseFlag(name, value);
-							Typeface tf = (Typeface) Utils.invoke(v, "getTypeface", null);
-							Utils.invoke(v, "setTypeface", new Class[]{Typeface.class, int.class}, tf, style);
-							continue;
-						}
+                        int style = parseFlag(name, value);
+                        Typeface tf = (Typeface) Utils.invoke(v, "getTypeface", null);
+                        Utils.invoke(v, "setTypeface", new Class[]{Typeface.class, int.class}, tf, style);
+                        continue;
+                    }
                     case "textAppearance": {
                         int attrid = resource.getRes(value);
                         Utils.invoke(v, "setTextAppearance", new Class[]{Context.class, int.class}, ctx, attrid);
-							continue;
-						}
+                        continue;
+                    }
 
 
                 }
@@ -689,13 +681,11 @@ public class ProxyAttributeSet
 
     }
 
-    private String parseRowAttributeValue(@NotNull String name, String value)
-	{
+    private String parseRowAttributeValue(@NonNull String name, String value) {
         //解析Android默认命名空间内元素
         //暂时不考虑引用资源的情况
-        switch (name)
-		{
-				//处理单位数字
+        switch (name) {
+            //处理单位数字
             case "switchMinWidth":
             case "switchPadding":
             case "thumbTextPadding":
@@ -726,7 +716,7 @@ public class ProxyAttributeSet
             case "maxHeight":
             case "textSize":
                 return parseUnitString2Px(value) + "";
-				//返回原来的值
+            //返回原来的值
             case "layout":
             case "src":
             case "style":
@@ -822,7 +812,7 @@ public class ProxyAttributeSet
             case "background":
             case "textStyle":
                 return value;
-				//处理枚举值
+            //处理枚举值
             case "alignmentMode":
             case "scaleType":
             case "textAlignment":
@@ -833,84 +823,67 @@ public class ProxyAttributeSet
 
                 return parseEnum(name, value);
             case "layout_width":
-            case "layout_height":{
-					String va=parseEnum(name, value);
-					if (va.equals("null"))
-					{
-						return (int) parseUnitString2Px(value) + "";
-					}
-					return va;
+            case "layout_height": {
+                String va = parseEnum(name, value);
+                if (va.equals("null")) {
+                    return (int) parseUnitString2Px(value) + "";
+                }
+                return va;
 
-				}
+            }
 
         }
         debug.logW(mParser.getLineNumber() + "行 " + mParser.getColumnNumber() + "列：没有解析的属性 " + name + " ，请检查属性是否存在（或解析器没有正确处理）。");
         return value;
     }
 
-    private String parseEnum(String name, String value)
-	{
+    private String parseEnum(String name, String value) {
         return parseEnum(name, value, "null");
     }
 
-    private String parseEnum(String name, String value, String def)
-	{
+    private String parseEnum(String name, String value, String def) {
         Map<String, String> map = enumMap.get(name);
         if (map.containsKey(value))
             return map.get(value);
         return def;
     }
 
-    private int parseFlag(String name, String value)
-	{
+    private int parseFlag(String name, String value) {
         // xx或xx|xx...或xx|,不允许xx||
         Map<String, Integer> map = flagMap.get(name);
-        if (!value.contains("|"))
-		{
+        if (!value.contains("|")) {
             return map.get(value);
         }
-		//flag类型好像都是int
+        //flag类型好像都是int
         int flag = -1;
         String[] flags = value.split("\\|");
-        for (String f : flags)
-		{
-            if (!f.trim().isEmpty())
-			{
+        for (String f : flags) {
+            if (!f.trim().isEmpty()) {
                 int v = map.get(f);
-                if (flag == -1)
-				{
+                if (flag == -1) {
                     flag = v;
-                }
-				else
-				{
-					//不太确定是否所有flag都是这么|的(•́ω•̀ ٥)
+                } else {
+                    //不太确定是否所有flag都是这么|的(•́ω•̀ ٥)
                     flag |= v;
                 }
+            } else {
+                debug.logE(value + "格式错误");
             }
-			else
-			{
-				debug.logE(value + "格式错误");
-			}
         }
         return flag;
     }
 
-    private float parseUnitString2Px(String unitString)
-	{
-		//xml支持的单位
+    private float parseUnitString2Px(String unitString) {
+        //xml支持的单位
         String[] suffixs = {"sp", "dp", "dip", "pt", "px", "mm", "in"};
         unitString = unitString.trim();
         int lastIndex = -1;
-        for (String suffix : suffixs)
-		{
-            if (unitString.endsWith(suffix))
-			{
+        for (String suffix : suffixs) {
+            if (unitString.endsWith(suffix)) {
                 lastIndex = unitString.length() - suffix.length();
-                try
-				{
+                try {
                     float v = Float.parseFloat(unitString.substring(0, lastIndex));
-                    switch (suffix)
-					{
+                    switch (suffix) {
                         case "sp":
                             return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, v, ctx.getResources().getDisplayMetrics());
                         case "dp":
@@ -927,9 +900,7 @@ public class ProxyAttributeSet
                             return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_IN, v, ctx.getResources().getDisplayMetrics());
                     }
 
-                }
-				catch (Exception e)
-				{
+                } catch (Exception e) {
 
                 }
                 break;
@@ -939,40 +910,33 @@ public class ProxyAttributeSet
         return -1;
     }
 
-    public int getAttributeCount()
-	{
+    public int getAttributeCount() {
         return mParser.getAttributeCount();
     }
 
-    public String getAttributeNamespace(int index)
-	{
+    public String getAttributeNamespace(int index) {
         return mParser.getAttributeNamespace(index);
     }
 
-    public String getAttributeName(int index)
-	{
+    public String getAttributeName(int index) {
         return mParser.getAttributeName(index);
     }
 
-    public String getAttributeValue(int index)
-	{
+    public String getAttributeValue(int index) {
         //转换
-		return parseRowAttributeValue(getAttributeName(index), mParser.getAttributeValue(index));
+        return parseRowAttributeValue(getAttributeName(index), mParser.getAttributeValue(index));
     }
 
-    public String getAttributeValue(String namespace, String name)
-	{
+    public String getAttributeValue(String namespace, String name) {
         //转换
         return parseRowAttributeValue(name, mParser.getAttributeValue(namespace, name));
     }
 
-    public String getPositionDescription()
-	{
+    public String getPositionDescription() {
         return mParser.getPositionDescription();
     }
 
-    public boolean hasAttribute(String name)
-	{
+    public boolean hasAttribute(String name) {
         return mParser.getAttributeValue(androidNS, name) != null;
     }
 }

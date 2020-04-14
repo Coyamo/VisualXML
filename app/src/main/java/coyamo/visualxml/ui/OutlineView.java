@@ -10,6 +10,7 @@ import android.view.ViewOverlay;
 import android.widget.LinearLayout;
 
 import coyamo.visualxml.utils.OutlineFactory;
+
 /*
 这个边框绘制暂时用viewoverlay
 有很多问题
@@ -68,7 +69,7 @@ public class OutlineView extends LinearLayout {
                         return true;
                     }
                 });
-               v.addOnLayoutChangeListener(new OnLayoutChangeListener() {
+                v.addOnLayoutChangeListener(new OnLayoutChangeListener() {
 
                     @Override
                     public void onLayoutChange(View p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9) {
