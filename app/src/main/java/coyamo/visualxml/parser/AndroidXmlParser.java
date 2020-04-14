@@ -12,9 +12,11 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Stack;
+
 import coyamo.visualxml.proxy.ProxyAttributeSet;
+import coyamo.visualxml.proxy.ProxyResources;
+import coyamo.visualxml.proxy.ViewCreator;
 import coyamo.visualxml.ui.OutlineView;
-import coyamo.visualxml.proxy.*;
 import coyamo.visualxml.utils.MessageArray;
 
 public class AndroidXmlParser
@@ -117,7 +119,6 @@ public class AndroidXmlParser
 						
 						/*
 						不知道这个检查错误的方法有没有bug
-						
 						*/
 						if(lastView==viewGroup){
                        		OutlineView.addViewInto(view, viewGroup, container);

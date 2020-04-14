@@ -1,13 +1,17 @@
 package coyamo.visualxml.ui;
-import android.content.*;
-import android.graphics.*;
-import android.util.*;
-import android.view.View.*;
-import android.widget.*;
+
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Typeface;
+import android.util.TypedValue;
+import android.widget.FrameLayout;
 //继承viewgroup 防止出现未知tag内的view被解析到同一层次
 public class DefaultView extends FrameLayout
 {
-	private String text;
+	private String text = "null";
 	private int minSize;
 	private Paint paint;
 	public DefaultView(Context ctx){
@@ -23,14 +27,14 @@ public class DefaultView extends FrameLayout
 	}
 	
 	public void setDisplayText(CharSequence cs){
-		this.text=cs.toString();
+		if (cs == null) text = "null";
+		else text = cs.toString();
 		invalidate();
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas)
 	{
-		if(text==null)text="null";
 		Paint.FontMetricsInt fontMetrics = paint.getFontMetricsInt();
         int dy = (fontMetrics.bottom - fontMetrics.top)/2 - fontMetrics.bottom;
         int baseLineY = getHeight()/2 + dy;
@@ -41,8 +45,6 @@ public class DefaultView extends FrameLayout
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
 	{
-		
-		if(text==null)text="null";
 		int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
    
@@ -60,7 +62,6 @@ public class DefaultView extends FrameLayout
         if (heightMode == MeasureSpec.AT_MOST) {
 			height =Math.max(minSize, bounds.height()+getPaddingTop()+getPaddingBottom());
         }
-        //设置宽高
         setMeasuredDimension(width, height);
 
 	}

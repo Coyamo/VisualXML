@@ -4,15 +4,12 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
+import org.jetbrains.annotations.NotNull;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -339,7 +336,7 @@ public class ProxyAttributeSet
                         Utils.invoke(v, "setVisibility", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
                     case "text":
-                        Utils.invoke(v, "setText", new Class[]{CharSequence.class}, value);
+                        Utils.invoke(v, "setText", new Class[]{CharSequence.class}, resource.getString(value));
                         continue;
                     case "alpha":
                         if (getAttributeValue(androidNS, "enabled") == null || getAttributeValue(androidNS, "enabled").equals(true))
@@ -367,7 +364,7 @@ public class ProxyAttributeSet
                         Utils.invoke(v, "setEms", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
                     case "hint":
-                        Utils.invoke(v, "setHint", new Class[]{CharSequence.class}, value);
+                        Utils.invoke(v, "setHint", new Class[]{CharSequence.class}, resource.getString(value));
                         continue;
                     case "lines":
                         Utils.invoke(v, "setLines", new Class[]{int.class}, Integer.parseInt(value));
@@ -556,13 +553,13 @@ public class ProxyAttributeSet
                         Utils.invoke(v, "setChecked", new Class[]{boolean.class}, Boolean.parseBoolean(value));
                         continue;
                     case "textOff": {
-							Utils.invoke(v, "setTextOff", new Class[]{CharSequence.class}, value);
+                        Utils.invoke(v, "setTextOff", new Class[]{CharSequence.class}, resource.getString(value));
 							boolean b = (boolean) Utils.invoke(v, "isChecked", null);
 							Utils.invoke(v, "setChecked", new Class[]{boolean.class}, b);
 							continue;
 						}
                     case "textOn": {
-							Utils.invoke(v, "setTextOn", new Class[]{CharSequence.class}, value);
+                        Utils.invoke(v, "setTextOn", new Class[]{CharSequence.class}, resource.getString(value));
 							boolean b = (boolean) Utils.invoke(v, "isChecked", null);
 							Utils.invoke(v, "setChecked", new Class[]{boolean.class}, b);
 							continue;
@@ -681,17 +678,8 @@ public class ProxyAttributeSet
 							continue;
 						}
                     case "textAppearance": {
-							try
-							{
-								int attrid = resource.getRes(value);
-								Utils.invoke(v, "setTextAppearance", new Class[]{Context.class, int.class}, ctx, attrid);
-
-							}
-							catch (Exception e)
-							{
-								debug.logE(mParser.getLineNumber() + "行 " + mParser.getColumnNumber() + "列：" + mParser.getName() + "textAppearance 失败。" + e);
-
-							}
+                        int attrid = resource.getRes(value);
+                        Utils.invoke(v, "setTextAppearance", new Class[]{Context.class, int.class}, ctx, attrid);
 							continue;
 						}
 
@@ -701,7 +689,7 @@ public class ProxyAttributeSet
 
     }
 
-    private String parseRowAttributeValue(String name, String value)
+    private String parseRowAttributeValue(@NotNull String name, String value)
 	{
         //解析Android默认命名空间内元素
         //暂时不考虑引用资源的情况

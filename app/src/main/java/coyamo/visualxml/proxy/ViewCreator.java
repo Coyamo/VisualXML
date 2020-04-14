@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.reflect.Constructor;
 
 import coyamo.visualxml.ui.DefaultView;
@@ -17,85 +19,62 @@ public class ViewCreator {
     //private static final String TAG_TAG = "tag";
     private static final String[] sClassPrefixList = {
             "android.widget.",
-			"android.view.",
+            "android.view.",
             "android.webkit.",
             "android.app."
-			
     };
 
-    public static View create(String cla, Context ctx) {
-		if(cla.startsWith("coyamo.visualxml."))return createDefault(ctx,cla);
-		
-		if (isFullPackage(cla)) {
-            try {
-                return _create(cla, ctx);
-            } catch (Exception e) {
-            }
-        } else {
-            try {
-                return createSpecial(cla, ctx);
-            } catch (Exception e) {
-            }
+    public static View create(@NotNull String name, @NotNull Context ctx) {
+        if (name.startsWith("coyamo.visualxml.")) return createDefault(ctx, name);
+        View v = null;
+        if (isFullPackage(name)) v = _create(name, ctx);
+        if (v == null) v = createSpecial(name, ctx);
+        if (v == null) {
             for (String prefix : sClassPrefixList) {
-                try {
-                    View v = _create(prefix + cla, ctx);
-                    if (v != null) {
-                        return v;
-                    }
-                } catch (Exception e) {
-
-                }
+                v = _create(prefix + name, ctx);
+                if (v != null) return v;
             }
         }
-        return createDefault(ctx, cla);
+        if (v == null) return createDefault(ctx, name);
+        return v;
     }
 
-    public static View create(String cla, Context ctx, int defStyle) {
-		if(cla.startsWith("coyamo.visualxml."))return createDefault(ctx,cla);
-		
-		if (isFullPackage(cla)) {
-            try {
-                return _create(cla, ctx, defStyle);
-            } catch (Exception e) {
-            }
-        } else {
-            try {
-                return createSpecial(cla, ctx);
-            } catch (Exception e) {
-            }
+    public static View create(@NotNull String name, @NotNull Context ctx, int defStyle) {
+        if (name.startsWith("coyamo.visualxml.")) return createDefault(ctx, name);
+        View v = null;
+        if (isFullPackage(name)) v = _create(name, ctx, defStyle);
+        if (v == null) v = createSpecial(name, ctx);
+        if (v == null) {
             for (String prefix : sClassPrefixList) {
-                try {
-                    View v = _create(prefix + cla, ctx, defStyle);
-                    if (v != null) {
-                        return v;
-                    }
-                } catch (Exception e) {
-                }
+                v = _create(prefix + name, ctx, defStyle);
+                if (v != null) return v;
             }
         }
-        return createDefault(ctx, cla);
+        if (v == null) return createDefault(ctx, name);
+        return v;
     }
 
-    private static View createDefault(Context ctx, String text) {
+    private static View createDefault(@NotNull Context ctx, String text) {
         DefaultView v = new DefaultView(ctx);
         v.setDisplayText(text);
         return v;
     }
 
-    private static View _create(String cla, Context ctx) throws Exception {
-
-        Class<?> clszz = Class.forName(cla);
-        Constructor<?> con = clszz.getDeclaredConstructor(Context.class);
-        con.setAccessible(true);
-        return (View) con.newInstance(ctx);
-
-
+    private static View _create(@NotNull String name, @NotNull Context ctx) {
+        try {
+            Class<?> clazz = Class.forName(name);
+            Constructor<?> con = clazz.getDeclaredConstructor(Context.class);
+            con.setAccessible(true);
+            return (View) con.newInstance(ctx);
+        } catch (Exception e) {
+        }
+        return null;
     }
 
-    private static View _create(String cla, Context ctx, int defstyle) {
+    private static View _create(@NotNull String cla, @NotNull Context ctx, int defstyle) {
         try {
-            Class<?> clszz = Class.forName(cla);
-            Constructor<?> con = clszz.getDeclaredConstructor(Context.class, AttributeSet.class, int.class);
+            Class<?> clazz = Class.forName(cla);
+            Constructor<?> con = clazz.getDeclaredConstructor(Context.class, AttributeSet.class, int.class);
             con.setAccessible(true);
             return (View) con.newInstance(ctx, null, defstyle);
         } catch (Exception e) {
@@ -104,19 +83,17 @@ public class ViewCreator {
     }
 
 
-    private static View createSpecial(String tag, Context ctx) throws Exception {
-        	switch (tag) {
+    private static View createSpecial(@NotNull String tag, @NotNull Context ctx) {
+        switch (tag) {
             case TAG_INCLUDE:
                 return createDefault(ctx, tag);
             case TAG_1995:
                 return new BlinkLayout(ctx, null);
         }
-
-        throw new Exception();
-
+        return null;
     }
 
-    private static boolean isFullPackage(String s) {
+    private static boolean isFullPackage(@NotNull String s) {
         return s.contains(".");
     }
 }
