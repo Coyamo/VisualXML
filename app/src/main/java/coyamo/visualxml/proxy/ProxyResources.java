@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.DrawableWrapper;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -14,7 +15,6 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-import coyamo.visualxml.R;
 import coyamo.visualxml.utils.MessageArray;
 import coyamo.visualxml.utils.Utils;
 
@@ -24,7 +24,7 @@ import coyamo.visualxml.utils.Utils;
 public class ProxyResources {
     private static ProxyResources instance;
     private MessageArray debug = MessageArray.getInstanse();
-    private Map<String, Drawable> drawableMap = new HashMap<>();
+    private Map<String, String> drawableMap = new HashMap<>();
     private Map<String, Integer> viewIdMap = new HashMap<>();
     private Map<String, Integer> colorMap = new HashMap<>();
     private Map<String, String> stringMap = new HashMap<>();
@@ -50,8 +50,7 @@ public class ProxyResources {
         colorMap.clear();
         stringMap.clear();
 
-        instance.putColor("red", Color.RED);
-        instance.putDrawable("ic_launcher", ctx.getResources().getDrawable(R.mipmap.ic_launcher));
+        //instance.putColor("test", Color.RED);
 
     }
 
@@ -163,7 +162,7 @@ public class ProxyResources {
             }
         } else if (reference.startsWith("@drawable/")) {
             if (drawableMap.containsKey(name)) {
-                return drawableMap.get(name);
+                return DrawableWrapper.createFromPath(drawableMap.get(name));
             }
         } else if (reference.startsWith("?android:attr/")) {
             int i = getAttr(reference);
@@ -204,8 +203,9 @@ public class ProxyResources {
         return reference.substring(reference.indexOf(sep) + 1);
     }
 
-    public void putDrawable(String name, Drawable drawable) {
-        drawableMap.put(name, drawable);
+    //图片的路径 只支持普通图片
+    public void putDrawable(String name, String drawableFilePath) {
+        drawableMap.put(name, drawableFilePath);
     }
 
     public void putColor(String name, int color) {
