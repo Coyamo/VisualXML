@@ -717,6 +717,7 @@ public class ProxyAttributeSet {
             case "textSize":
                 return parseUnitString2Px(value) + "";
             //返回原来的值
+            case "gravity":
             case "layout":
             case "src":
             case "style":
