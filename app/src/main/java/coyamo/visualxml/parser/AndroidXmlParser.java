@@ -16,7 +16,6 @@ import java.util.Stack;
 import coyamo.visualxml.proxy.ProxyAttributeSet;
 import coyamo.visualxml.proxy.ProxyResources;
 import coyamo.visualxml.proxy.ViewCreator;
-import coyamo.visualxml.ui.OutlineView;
 import coyamo.visualxml.utils.MessageArray;
 
 public class AndroidXmlParser {
@@ -26,12 +25,10 @@ public class AndroidXmlParser {
     private Stack<View> allViewStack = new Stack<>();
     //存放解析过程中的viewgroup
     private Stack<ViewGroup> viewGroupStack = new Stack<>();
-    private OutlineView container;
     private MessageArray debug = MessageArray.getInstanse();
 
-    private AndroidXmlParser(Context context, OutlineView container) {
+    private AndroidXmlParser(Context context, ViewGroup container) {
         this.context = context;
-        this.container = container;
         viewGroupStack.push(container);
         allViewStack.push(container);
         try {
@@ -43,7 +40,7 @@ public class AndroidXmlParser {
         }
     }
 
-    public static AndroidXmlParser with(OutlineView container) {
+    public static AndroidXmlParser with(ViewGroup container) {
         AndroidXmlParser axp = new AndroidXmlParser(container.getContext(), container);
         return axp;
     }
@@ -93,7 +90,7 @@ public class AndroidXmlParser {
                         } else {
                             view = ViewCreator.create(tagName, context);
                         }
-                        //当前viewgroup
+                        //当前view group
                         ViewGroup viewGroup = viewGroupStack.peek();
                         //当前view
                         View lastView = allViewStack.peek();
@@ -102,7 +99,7 @@ public class AndroidXmlParser {
 						不知道这个检查错误的方法有没有bug
 						*/
                         if (lastView == viewGroup) {
-                            OutlineView.addViewInto(view, viewGroup, container);
+                            viewGroup.addView(view);
                         } else {
                             //出现了非viewgroup的view包含view的情况
                             debug.logE(parser.getLineNumber() + "行 " + parser.getColumnNumber() + "列：" + lastView.getClass().getName() + "不能转换为ViewGroup，已经自动忽略错误的xml片段。");
@@ -133,6 +130,8 @@ public class AndroidXmlParser {
             debug.logE(parser.getLineNumber() + "行 " + parser.getColumnNumber() + "列：解析过程中出现错误" + e);
 
         }
+
+
     }
 
 }
