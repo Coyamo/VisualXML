@@ -7,4 +7,9 @@
         android:orderInCategory="0"
         app:showAsAction="always"
         android:title="debug" />
+    <item
+        android:id="@+id/change"
+        android:orderInCategory="1"
+        android:title="切换"
+        app:showAsAction="always" />
 </menu>
