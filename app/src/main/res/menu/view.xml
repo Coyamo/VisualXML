@@ -9,7 +9,24 @@
         android:title="debug" />
     <item
         android:id="@+id/change"
+        android:icon="@drawable/ic_change_outline_type"
         android:orderInCategory="1"
         android:title="切换"
-        app:showAsAction="always" />
+        app:showAsAction="always">
+        <menu>
+            <group android:checkableBehavior="none">
+                <item
+                    android:id="@+id/display_view"
+                    android:title="View" />
+                <item
+                    android:id="@+id/display_design"
+                    android:title="Design" />
+                <item
+                    android:id="@+id/display_blueprint"
+                    android:title="Blueprint" />
+            </group>
+        </menu>
+    </item>
+
+
 </menu>

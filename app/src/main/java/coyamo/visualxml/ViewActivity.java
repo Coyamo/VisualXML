@@ -66,8 +66,14 @@ public class ViewActivity extends AppCompatActivity {
                 else
                     drawer.openDrawer(drawerSub);
                 break;
-            case R.id.change:
-                outlineView.setShowOutlineOnly(!outlineView.isShowOutlineOnly());
+            case R.id.display_view:
+                outlineView.setDisplayType(OutlineView.DISPLAY_VIEW);
+                break;
+            case R.id.display_design:
+                outlineView.setDisplayType(OutlineView.DISPLAY_DESIGN);
+                break;
+            case R.id.display_blueprint:
+                outlineView.setDisplayType(OutlineView.DISPLAY_BLUEPRINT);
                 break;
         }
         return super.onOptionsItemSelected(item);

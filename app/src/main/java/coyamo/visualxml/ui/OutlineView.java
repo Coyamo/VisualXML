@@ -16,10 +16,21 @@ import java.util.List;
 
 public class OutlineView extends LinearLayout {
     Paint paint;
+    public static final int DISPLAY_VIEW = 0;
+    public static final int DISPLAY_DESIGN = 1;
+    public static final int DISPLAY_BLUEPRINT = 2;
+    private int displayType = DISPLAY_DESIGN;
+
+    public int getDisplayType() {
+        return displayType;
+    }
+
+    public void setDisplayType(int displayType) {
+        this.displayType = displayType;
+        invalidate();
+    }
     private List<Rect> bounds = new ArrayList<>();
 
-
-    private boolean showOutlineOnly;
     public OutlineView(Context ctx) {
         super(ctx);
         init();
@@ -40,10 +51,23 @@ public class OutlineView extends LinearLayout {
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
-        if (!showOutlineOnly) super.dispatchDraw(canvas);
-        toOutlinePaint(showOutlineOnly);
-        for (Rect bound : bounds) {
-            canvas.drawRect(fixRect(bound), paint);
+        switch (displayType) {
+            case DISPLAY_BLUEPRINT:
+                toBlueprintPaint();
+                for (Rect bound : bounds) {
+                    canvas.drawRect(fixRect(bound), paint);
+                }
+                break;
+            case DISPLAY_DESIGN:
+                toDesignPaint();
+                super.dispatchDraw(canvas);
+                for (Rect bound : bounds) {
+                    canvas.drawRect(fixRect(bound), paint);
+                }
+                break;
+            case DISPLAY_VIEW:
+                super.dispatchDraw(canvas);
+                break;
         }
     }
 
@@ -57,14 +81,7 @@ public class OutlineView extends LinearLayout {
         return r;
     }
 
-    public boolean isShowOutlineOnly() {
-        return showOutlineOnly;
-    }
 
-    public void setShowOutlineOnly(boolean showOutlineOnly) {
-        this.showOutlineOnly = showOutlineOnly;
-        invalidate();
-    }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
@@ -101,14 +118,15 @@ public class OutlineView extends LinearLayout {
 
     }
 
-    private void toOutlinePaint(boolean onlyOutline) {
+    private void toBlueprintPaint() {
         paint.setPathEffect(new DashPathEffect(new float[]{5, 5}, 0));
-        if (onlyOutline) {
-            paint.setStrokeWidth(2);
-            paint.setColor(0xff40c4ff);
-        } else {
-            paint.setStrokeWidth(1);
-            paint.setColor(Color.GRAY);
-        }
+        paint.setStrokeWidth(2);
+        paint.setColor(0xff40c4ff);
+    }
+
+    private void toDesignPaint() {
+        paint.setPathEffect(new DashPathEffect(new float[]{5, 5}, 0));
+        paint.setStrokeWidth(1);
+        paint.setColor(Color.GRAY);
     }
 }
