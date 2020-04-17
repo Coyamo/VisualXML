@@ -1,4 +1,4 @@
-package coyamo.visualxml.utils;
+package coyamo.visualxml.lib.utils;
 
 import android.content.Context;
 import android.util.TypedValue;

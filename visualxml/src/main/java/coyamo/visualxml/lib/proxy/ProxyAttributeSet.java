@@ -1,4 +1,4 @@
-package coyamo.visualxml.proxy;
+package coyamo.visualxml.lib.proxy;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -16,8 +16,8 @@ import org.xmlpull.v1.XmlPullParser;
 import java.util.HashMap;
 import java.util.Map;
 
-import coyamo.visualxml.utils.MessageArray;
-import coyamo.visualxml.utils.Utils;
+import coyamo.visualxml.lib.utils.MessageArray;
+import coyamo.visualxml.lib.utils.Utils;
 
 
 public class ProxyAttributeSet {

@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import coyamo.visualxml.utils.Utils;
+import coyamo.visualxml.lib.utils.Utils;
 
 public class SignAdapter extends RecyclerView.Adapter<SignAdapter.ViewHolder> {
     private String sign[] = {"\t", "<", ">", "/", "=", "\"", ":", "@", "+", "(", ")", ";", ",", ".", "?", "|", "\\", "&", "!", "[", "]", "{", "}", "_", "-"};

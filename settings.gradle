@@ -1,2 +1,3 @@
 rootProject.name='VisualXML'
 include ':app'
+include ':visualxml'

@@ -10,11 +10,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import coyamo.visualxml.parser.AndroidXmlParser;
-import coyamo.visualxml.proxy.ProxyResources;
+import coyamo.visualxml.lib.parser.AndroidXmlParser;
+import coyamo.visualxml.lib.proxy.ProxyResources;
+import coyamo.visualxml.lib.ui.OutlineView;
+import coyamo.visualxml.lib.utils.MessageArray;
 import coyamo.visualxml.ui.ErrorMessageAdapter;
-import coyamo.visualxml.ui.OutlineView;
-import coyamo.visualxml.utils.MessageArray;
 
 public class ViewActivity extends AppCompatActivity {
     private OutlineView outlineView;

@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import coyamo.visualxml.R;
-import coyamo.visualxml.proxy.ProxyResources;
-import coyamo.visualxml.utils.Utils;
+import coyamo.visualxml.lib.proxy.ProxyResources;
+import coyamo.visualxml.lib.utils.Utils;
 
 public class ResourceListAdapter extends RecyclerView.Adapter<ResourceListAdapter.ViewHolder> {
     private Map<String, String> map;

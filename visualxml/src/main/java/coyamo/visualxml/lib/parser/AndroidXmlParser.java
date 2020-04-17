@@ -1,4 +1,4 @@
-package coyamo.visualxml.parser;
+package coyamo.visualxml.lib.parser;
 
 import android.content.Context;
 import android.view.View;
@@ -13,10 +13,10 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.Stack;
 
-import coyamo.visualxml.proxy.ProxyAttributeSet;
-import coyamo.visualxml.proxy.ProxyResources;
-import coyamo.visualxml.proxy.ViewCreator;
-import coyamo.visualxml.utils.MessageArray;
+import coyamo.visualxml.lib.proxy.ProxyAttributeSet;
+import coyamo.visualxml.lib.proxy.ProxyResources;
+import coyamo.visualxml.lib.proxy.ViewCreator;
+import coyamo.visualxml.lib.utils.MessageArray;
 
 public class AndroidXmlParser {
     private XmlPullParser parser;

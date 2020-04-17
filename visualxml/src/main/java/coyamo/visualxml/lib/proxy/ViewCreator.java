@@ -1,4 +1,4 @@
-package coyamo.visualxml.proxy;
+package coyamo.visualxml.lib.proxy;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -8,8 +8,8 @@ import androidx.annotation.NonNull;
 
 import java.lang.reflect.Constructor;
 
-import coyamo.visualxml.ui.DefaultView;
-import coyamo.visualxml.ui.proxy.BlinkLayout;
+import coyamo.visualxml.lib.ui.DefaultView;
+import coyamo.visualxml.lib.ui.proxy.BlinkLayout;
 
 public class ViewCreator {
     //private static final String TAG_MERGE = "merge";

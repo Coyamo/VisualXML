@@ -24,7 +24,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import coyamo.visualxml.proxy.ProxyResources;
+import coyamo.visualxml.lib.proxy.ProxyResources;
 import coyamo.visualxml.ui.ResourcePagerAdapter;
 import coyamo.visualxml.ui.SignAdapter;
 

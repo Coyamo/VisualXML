@@ -1,4 +1,4 @@
-package coyamo.visualxml.ui;
+package coyamo.visualxml.lib.ui;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -15,11 +15,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OutlineView extends LinearLayout {
-    Paint paint;
     public static final int DISPLAY_VIEW = 0;
     public static final int DISPLAY_DESIGN = 1;
     public static final int DISPLAY_BLUEPRINT = 2;
+    Paint paint;
     private int displayType = DISPLAY_DESIGN;
+    private List<Rect> bounds = new ArrayList<>();
+
+    public OutlineView(Context ctx) {
+        super(ctx);
+        init();
+    }
+
+    public OutlineView(Context ctx, AttributeSet a) {
+        super(ctx, a);
+        init();
+    }
 
     public int getDisplayType() {
         return displayType;
@@ -28,18 +39,6 @@ public class OutlineView extends LinearLayout {
     public void setDisplayType(int displayType) {
         this.displayType = displayType;
         invalidate();
-    }
-    private List<Rect> bounds = new ArrayList<>();
-
-    public OutlineView(Context ctx) {
-        super(ctx);
-        init();
-    }
-
-
-    public OutlineView(Context ctx, AttributeSet a) {
-        super(ctx, a);
-        init();
     }
 
     private void init() {
@@ -80,7 +79,6 @@ public class OutlineView extends LinearLayout {
         r.bottom -= half;
         return r;
     }
-
 
 
     @Override

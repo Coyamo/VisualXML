@@ -1,4 +1,4 @@
-package coyamo.visualxml.proxy;
+package coyamo.visualxml.lib.proxy;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,8 +15,8 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-import coyamo.visualxml.utils.MessageArray;
-import coyamo.visualxml.utils.Utils;
+import coyamo.visualxml.lib.utils.MessageArray;
+import coyamo.visualxml.lib.utils.Utils;
 
 /*
 处理xml中的引用类型的值（不全面）
@@ -29,6 +29,7 @@ public class ProxyResources {
     private Map<String, String> colorMap = new HashMap<>();
     private Map<String, String> stringMap = new HashMap<>();
     private Context ctx;
+
     private ProxyResources(Context ctx) {
         this.ctx = ctx;
     }

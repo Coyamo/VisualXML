@@ -1,4 +1,4 @@
-package coyamo.visualxml.ui;
+package coyamo.visualxml.lib.ui;
 
 import android.content.Context;
 import android.graphics.Canvas;

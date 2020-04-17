@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import coyamo.visualxml.R;
-import coyamo.visualxml.utils.MessageArray;
-import coyamo.visualxml.utils.XmlMessage;
+import coyamo.visualxml.lib.utils.MessageArray;
+import coyamo.visualxml.lib.utils.XmlMessage;
 
 public class ErrorMessageAdapter extends RecyclerView.Adapter<ErrorMessageAdapter.ViewHolder> {
     private List<XmlMessage> msglist = new ArrayList<>();

@@ -1,4 +1,4 @@
-package coyamo.visualxml.ui.proxy;
+package coyamo.visualxml.lib.ui.proxy;
 
 import android.content.Context;
 import android.graphics.Canvas;
