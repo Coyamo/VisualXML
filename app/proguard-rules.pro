@@ -19,3 +19,11 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+#androidx包使用混淆
+#-keep class com.google.android.material.** {*;}
+#-keep class androidx.** {*;}
+#-keep public class * extends androidx.**
+#-keep interface androidx.** {*;}
+#-dontwarn com.google.android.material.**
+#-dontnote com.google.android.material.**
+#-dontwarn androidx.**
