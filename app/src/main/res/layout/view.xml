@@ -21,9 +21,9 @@
         android:elevation="2dp"
         android:layout_height="48dp"
         android:clickable="true"
+        android:focusable="true"
         android:background="#f8f8f8"
         android:layout_width="match_parent"
-        android:focusable="true"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -69,6 +69,8 @@
             <View
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:clickable="true"
+                android:focusable="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
                 android:background="@drawable/ic_component_tree"
