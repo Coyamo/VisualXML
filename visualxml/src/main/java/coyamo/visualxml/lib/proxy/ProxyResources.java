@@ -216,11 +216,11 @@ public class ProxyResources {
         return Color.TRANSPARENT;
     }
 
-    public String parseReferName(String reference) {
+    public static String parseReferName(String reference) {
         return parseReferName(reference, "/");
     }
 
-    public String parseReferName(String reference, String sep) {
+    public static String parseReferName(String reference, String sep) {
         return reference.substring(reference.indexOf(sep) + 1);
     }
 

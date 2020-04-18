@@ -16,6 +16,7 @@ import org.xmlpull.v1.XmlPullParser;
 import java.util.HashMap;
 import java.util.Map;
 
+import coyamo.visualxml.lib.parser.AndroidXmlParser;
 import coyamo.visualxml.lib.utils.MessageArray;
 import coyamo.visualxml.lib.utils.Utils;
 
@@ -168,7 +169,7 @@ public class ProxyAttributeSet {
     /*
      这里没有对命名空间进行详细的解析
      */
-    private String androidNS = "http://schemas.android.com/apk/res/android";
+
 
     public ProxyAttributeSet(XmlPullParser parser, Context ctx) {
         this.ctx = ctx;
@@ -179,7 +180,7 @@ public class ProxyAttributeSet {
     public void setTo(final View v) {
 
         if (hasAttribute("id")) {
-            resource.registerViewId(v, getAttributeValue(androidNS, "id"));
+            resource.registerViewId(v, getAttributeValue(AndroidXmlParser.ANDROID_NS, "id"));
         }
         //除了几个特殊的 其他view必须要有
         if (!hasAttribute("layout_width")) {
@@ -199,7 +200,7 @@ public class ProxyAttributeSet {
             String name = getAttributeName(i);
             final String value = getAttributeValue(i);
             //命名空间
-            if (mParser.getAttributeNamespace(i).equals(androidNS))
+            if (mParser.getAttributeNamespace(i).equals(AndroidXmlParser.ANDROID_NS))
                 switch (name) {
                     case "layout_centerInParent":
                         if (Boolean.parseBoolean(value))
@@ -331,7 +332,7 @@ public class ProxyAttributeSet {
                         Utils.invoke(v, "setText", new Class[]{CharSequence.class}, resource.getString(value));
                         continue;
                     case "alpha":
-                        if (getAttributeValue(androidNS, "enabled") == null || getAttributeValue(androidNS, "enabled").equals(true))
+                        if (getAttributeValue(AndroidXmlParser.ANDROID_NS, "enabled") == null || getAttributeValue(AndroidXmlParser.ANDROID_NS, "enabled").equals(true))
                             Utils.invoke(v, "setAlpha", new Class[]{float.class}, Float.parseFloat(value));
                         continue;
                     case "elevation":
@@ -938,7 +939,7 @@ public class ProxyAttributeSet {
     }
 
     public boolean hasAttribute(String name) {
-        return mParser.getAttributeValue(androidNS, name) != null;
+        return mParser.getAttributeValue(AndroidXmlParser.ANDROID_NS, name) != null;
     }
 }
 

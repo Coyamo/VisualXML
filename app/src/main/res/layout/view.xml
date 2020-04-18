@@ -19,23 +19,28 @@
         android:orientation="vertical">
     <LinearLayout
         android:elevation="2dp"
+        android:layout_height="48dp"
+        android:clickable="true"
         android:background="#f8f8f8"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:focusable="true"
         android:gravity="center_vertical"
         android:orientation="horizontal">
-        <ImageView
-            android:padding="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_debug"/>
+
+        <View
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/ic_debug"
+            android:padding="5dp" />
         <TextView
+            android:text="Debug"
             android:textSize="18sp"
-            android:textStyle="bold"
             android:padding="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Debug"/>
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -45,4 +50,43 @@
             android:layout_height="match_parent"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/drawer_sub2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#ffffff"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="#f8f8f8"
+            android:elevation="2dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/ic_component_tree"
+                android:padding="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Component Tree"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/view_tree"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 </androidx.drawerlayout.widget.DrawerLayout>

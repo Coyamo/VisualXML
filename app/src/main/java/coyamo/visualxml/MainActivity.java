@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -31,7 +32,7 @@ import coyamo.visualxml.ui.SignAdapter;
 public class MainActivity extends AppCompatActivity {
     private EditText editor;
     private RecyclerView signlist;
-    private ProxyResources resources;
+    //private ProxyResources resources;
     private DrawerLayout drawer;
     private LinearLayout drawerSub;
     private Button add;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         drawer = findViewById(R.id.maindrawerLayout);
         editor = findViewById(R.id.editor);
         signlist = findViewById(R.id.sign_list);
-        resources = ProxyResources.getInstance();
+        //resources = ProxyResources.getInstance();
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Raw XML");
@@ -80,11 +81,32 @@ public class MainActivity extends AppCompatActivity {
         tab.setupWithViewPager(pager);
         pager.setAdapter(adapter);
 
-
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 adapter.addData(pager.getCurrentItem());
+            }
+        });
+
+
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
             }
         });
     }
@@ -120,5 +142,13 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(drawerSub)) {
+            drawer.closeDrawers();
+        } else {
+            super.onBackPressed();
+        }
 
+    }
 }

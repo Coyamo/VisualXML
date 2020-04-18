@@ -11,7 +11,7 @@
 		android:id="@+id/sign_list"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_alignParentBottom="true"/>
+		android:layout_alignParentBottom="true" />
 
 	<View
 		android:id="@+id/div"
@@ -34,12 +34,14 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_gravity="end"
+		android:clickable="true"
+		android:focusable="true"
 		android:background="#ffffff"
 		android:orientation="vertical">
 
 		<RelativeLayout
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
+			android:layout_height="48dp"
 			android:background="#f8f8f8"
 			android:elevation="2dp">
 
@@ -49,7 +51,7 @@
 				android:layout_height="24dp"
 				android:layout_centerVertical="true"
 				android:layout_marginLeft="5dp"
-				android:background="@drawable/ic_res"
+				android:background="@drawable/ic_visual_assets"
 				android:padding="5dp" />
 
 			<TextView
@@ -58,7 +60,7 @@
 				android:layout_centerVertical="true"
 				android:layout_toRightOf="@id/title_icon"
 				android:padding="5dp"
-				android:text="资源管理器"
+				android:text="Resource Manager"
 				android:textSize="18sp"
 				android:textStyle="bold" />
 
@@ -84,4 +86,6 @@
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"></androidx.viewpager.widget.ViewPager>
 	</LinearLayout>
+
+
 </androidx.drawerlayout.widget.DrawerLayout>

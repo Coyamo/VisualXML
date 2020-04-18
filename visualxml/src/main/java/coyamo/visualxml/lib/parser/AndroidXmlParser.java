@@ -19,7 +19,9 @@ import coyamo.visualxml.lib.proxy.ViewCreator;
 import coyamo.visualxml.lib.utils.MessageArray;
 
 public class AndroidXmlParser {
+    public static final String ANDROID_NS = "http://schemas.android.com/apk/res/android";
     private XmlPullParser parser;
+    private OnParseListener listener;
     private Context context;
     //存放解析过程中的所有view
     private Stack<View> allViewStack = new Stack<>();
@@ -53,12 +55,15 @@ public class AndroidXmlParser {
     }
 
     public AndroidXmlParser parse(Reader reader) {
+        if (listener != null) listener.onStart();
         try {
             parser.setInput(reader);
             parse();
             reader.close();
         } catch (Exception e) {
             debug.logW("从Reader解析失败：" + e);
+        } finally {
+            if (listener != null) listener.onFinish();
         }
         return this;
     }
@@ -78,6 +83,11 @@ public class AndroidXmlParser {
             int eventType = parser.getEventType();
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
+                    case XmlPullParser.TEXT:
+                        if (!parser.getText().trim().isEmpty()) {
+                            debug.logE(parser.getLineNumber() + "行 " + parser.getColumnNumber() + "列： 标签内不应该出现文字： " + parser.getText());
+                        }
+                        break;
                     case XmlPullParser.START_TAG:
                         String tagName = parser.getName();
                         View view;
@@ -94,20 +104,27 @@ public class AndroidXmlParser {
                         ViewGroup viewGroup = viewGroupStack.peek();
                         //当前view
                         View lastView = allViewStack.peek();
-						
-						/*
+
+                        ViewGroup viewGroup2 = null;
+                        if (view instanceof ViewGroup) {
+                            //添加到viewgroup栈
+                            viewGroup2 = viewGroupStack.push((ViewGroup) view);
+                            if (listener != null)
+                                listener.onJoin(viewGroup2, new ReadOnlyParser(parser));
+                        }
+
+                        /*
 						不知道这个检查错误的方法有没有bug
 						*/
                         if (lastView == viewGroup) {
                             viewGroup.addView(view);
+                            if (listener != null && viewGroup2 != view)
+                                listener.onAddChildView(view, new ReadOnlyParser(parser));
                         } else {
                             //出现了非viewgroup的view包含view的情况
                             debug.logE(parser.getLineNumber() + "行 " + parser.getColumnNumber() + "列：" + lastView.getClass().getName() + "不能转换为ViewGroup，已经自动忽略错误的xml片段。");
                         }
-                        if (view instanceof ViewGroup) {
-                            //添加到viewgroup栈
-                            viewGroupStack.push((ViewGroup) view);
-                        }
+
 
                         allViewStack.push(view);
 
@@ -119,7 +136,9 @@ public class AndroidXmlParser {
                     case XmlPullParser.END_TAG:
                         View v = allViewStack.pop();
                         if (v instanceof ViewGroup) {
-                            viewGroupStack.pop();
+                            ViewGroup viewGroup1 = viewGroupStack.pop();
+                            if (listener != null)
+                                listener.onRevert(viewGroup1, new ReadOnlyParser(parser));
                         }
                         break;
                 }
@@ -128,10 +147,25 @@ public class AndroidXmlParser {
 
         } catch (Exception e) {
             debug.logE(parser.getLineNumber() + "行 " + parser.getColumnNumber() + "列：解析过程中出现错误" + e);
-
         }
 
 
     }
 
+    public AndroidXmlParser setOnParseListener(OnParseListener listener) {
+        this.listener = listener;
+        return this;
+    }
+
+    public interface OnParseListener {
+        void onAddChildView(View v, ReadOnlyParser parser);
+
+        void onJoin(ViewGroup viewGroup, ReadOnlyParser parser);
+
+        void onRevert(ViewGroup viewGroup, ReadOnlyParser parser);
+
+        void onFinish();
+
+        void onStart();
+    }
 }

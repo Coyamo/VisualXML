@@ -8,9 +8,15 @@
         app:showAsAction="always"
         android:title="debug" />
     <item
-        android:id="@+id/change"
-        android:icon="@drawable/ic_change_outline_type"
+        android:id="@+id/component_tree"
+        android:icon="@drawable/ic_component_tree"
         android:orderInCategory="1"
+        android:title="控件树"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/change"
+        android:icon="@drawable/ic_view_mode"
+        android:orderInCategory="2"
         android:title="切换"
         app:showAsAction="always">
         <menu>

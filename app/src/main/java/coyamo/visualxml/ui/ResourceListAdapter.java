@@ -4,12 +4,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +54,7 @@ public class ResourceListAdapter extends RecyclerView.Adapter<ResourceListAdapte
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.resource_item, parent, false);
         final ViewHolder holder = new ViewHolder(view);
+        holder.icon.setBackground(new AlphaPatternDrawable(16));
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,23 +80,26 @@ public class ResourceListAdapter extends RecyclerView.Adapter<ResourceListAdapte
         String value = map.get(names.get(position));
         holder.name.setText(names.get(position));
         holder.value.setText(value);
-
-        holder.value.setBackgroundColor(Color.TRANSPARENT);
-        holder.value.setCompoundDrawables(null, null, null, null);
+        holder.icon.setVisibility(View.VISIBLE);
         switch (type) {
             case 0://str
+                holder.icon.setVisibility(View.GONE);
                 break;
             case 1://drawable
                 Drawable drawable = DrawableWrapper.createFromPath(value);
                 if (drawable != null) {
-                    drawable.setBounds(0, 0, 64, 64);
-                    holder.value.setCompoundDrawables(drawable, null, null, null);
+                    holder.icon.setImageDrawable(drawable);
                 } else
                     Toast.makeText(holder.item.getContext(), "不是图片的路径", Toast.LENGTH_SHORT).show();
                 break;
             case 2://color
-                if (Utils.isColor(value))
-                    holder.value.setBackgroundColor(Color.parseColor(value));
+                if (Utils.isColor(value)) {
+                    ColorDrawable cd = new ColorDrawable();
+                    cd.setColor(Color.parseColor(value));
+                    cd.setBounds(0, 0, 64, 64);
+                    holder.icon.setImageDrawable(cd);
+                }
+
                 else
                     Toast.makeText(holder.item.getContext(), "颜色格式错误", Toast.LENGTH_SHORT).show();
                 break;
@@ -140,11 +146,13 @@ public class ResourceListAdapter extends RecyclerView.Adapter<ResourceListAdapte
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView name;
         TextView value;
+        ImageView icon;
         View item;
 
         ViewHolder(View view) {
             super(view);
             item = view;
+            icon = view.findViewById(R.id.resource_item_icon);
             name = view.findViewById(R.id.name);
             value = view.findViewById(R.id.value);
         }

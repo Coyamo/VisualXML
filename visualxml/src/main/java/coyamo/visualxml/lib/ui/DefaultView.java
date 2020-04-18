@@ -42,6 +42,12 @@ public class DefaultView extends FrameLayout {
         canvas.drawText(text, baseLineX, baseLineY, paint);
     }
 
+    //不绘制子View
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+        //super.dispatchDraw(canvas);
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);

@@ -93,7 +93,12 @@ public class ViewCreator {
         return null;
     }
 
-    private static boolean isFullPackage(@NonNull String s) {
+    public static boolean isFullPackage(@NonNull String s) {
         return s.contains(".");
+    }
+
+    public static String getNameFromTag(@NonNull String s) {
+        if (isFullPackage(s)) return s.substring(s.lastIndexOf("."));
+        return s;
     }
 }

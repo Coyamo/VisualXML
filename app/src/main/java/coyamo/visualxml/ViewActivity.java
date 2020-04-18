@@ -3,6 +3,9 @@ package coyamo.visualxml;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,17 +13,27 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Stack;
+
 import coyamo.visualxml.lib.parser.AndroidXmlParser;
+import coyamo.visualxml.lib.parser.ReadOnlyParser;
 import coyamo.visualxml.lib.proxy.ProxyResources;
 import coyamo.visualxml.lib.ui.OutlineView;
 import coyamo.visualxml.lib.utils.MessageArray;
 import coyamo.visualxml.ui.ErrorMessageAdapter;
+import coyamo.visualxml.ui.treeview.ViewBean;
+import coyamo.visualxml.ui.treeview.ViewNodeBinder;
+import tellh.com.recyclertreeview_lib.TreeNode;
+import tellh.com.recyclertreeview_lib.TreeViewAdapter;
 
 public class ViewActivity extends AppCompatActivity {
     private OutlineView outlineView;
     private RecyclerView rv;
     private DrawerLayout drawer;
-    private LinearLayout drawerSub;
+    private LinearLayout drawerSub, drawerSub2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +42,7 @@ public class ViewActivity extends AppCompatActivity {
 
         drawer = findViewById(R.id.drawerLayout);
         drawerSub = findViewById(R.id.drawer_sub);
+        drawerSub2 = findViewById(R.id.drawer_sub2);
         outlineView = findViewById(R.id.outline_view);
         rv = findViewById(R.id.err_list);
         rv.setAdapter(new ErrorMessageAdapter());
@@ -36,35 +50,143 @@ public class ViewActivity extends AppCompatActivity {
         ProxyResources.getInstance().getViewIdMap().clear();
         MessageArray.getInstanse().clear();
 
+        final List<TreeNode> nodes = new ArrayList<>();
 
+        final Stack<TreeNode> treeNodeStack = new Stack<>();
         try {
-            //AndroidXmlParser.with(outlineView).parse(new File(xml));
-            AndroidXmlParser.with(outlineView).parse(getIntent().getStringExtra("xml"));
 
+            AndroidXmlParser.with(outlineView)
+                    .setOnParseListener(new AndroidXmlParser.OnParseListener() {
+                        @Override
+                        public void onAddChildView(View v, ReadOnlyParser parser) {
+                            ViewBean bean = new ViewBean(parser);
+                            bean.setViewGroup(v instanceof ViewGroup);
+
+                            TreeNode<ViewBean> child = new TreeNode<>(bean);
+                            //如果没有父Group
+                            //理论上这种情况应该不存在的？
+                            //这里暂不考虑
+                            if (treeNodeStack.size() == 0) {
+                                //添加到根
+                                nodes.add(child);
+                            } else {
+                                //添加到父亲
+                                TreeNode node = treeNodeStack.peek();
+                                node.addChild(child);
+                            }
+                        }
+
+                        @Override
+                        public void onJoin(ViewGroup viewGroup, ReadOnlyParser parser) {
+                            ViewBean bean = new ViewBean(parser);
+                            bean.setViewGroup(true);
+
+                            //生成group
+                            TreeNode<ViewBean> child = new TreeNode<>(bean);
+                            if (treeNodeStack.size() == 0) {
+                                treeNodeStack.push(child);
+                            } else {
+                                TreeNode node = treeNodeStack.peek();
+                                node.addChild(child);
+                                treeNodeStack.push(child);
+                            }
+                        }
+
+                        @Override
+                        public void onRevert(ViewGroup viewGroup, ReadOnlyParser parser) {
+                            TreeNode node = treeNodeStack.pop();
+                            //这种情况就是最外层的添加到node完成
+                            //把它添加到根list
+
+                            if (treeNodeStack.size() == 0) {
+                                //展开最外层
+                                node.expand();
+                                nodes.add(node);
+                            }
+                            //也有可能开始一个新的onJoin处理下一个group
+                            //或view
+                            //这种应该是不规范的xml
+                            //暂不考虑
+
+                        }
+
+                        @Override
+                        public void onFinish() {
+                        }
+
+                        @Override
+                        public void onStart() {
+                        }
+                    })
+                    .parse(getIntent().getStringExtra("xml"));
+
+            loadViewTree(nodes);
         } catch (Exception e) {
+            e.printStackTrace();
         }
+
         if (MessageArray.getInstanse().getList().size() > 0) {
             if (!drawer.isDrawerOpen(drawerSub))
                 drawer.openDrawer(drawerSub);
         }
+
+
+    }
+
+
+    private void loadViewTree(List<TreeNode> nodes) {
+        RecyclerView rv = findViewById(R.id.view_tree);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+
+        TreeViewAdapter adapter = new TreeViewAdapter(nodes, Arrays.asList(new ViewNodeBinder()));
+        adapter.setOnTreeNodeListener(new TreeViewAdapter.OnTreeNodeListener() {
+            @Override
+            public boolean onClick(TreeNode node, RecyclerView.ViewHolder holder) {
+
+                ViewBean type = (ViewBean) node.getContent();
+
+                if (type.isViewGroup()) {
+                    onToggle(!node.isExpand(), holder);
+                }
+
+                return false;
+            }
+
+            @Override
+            public void onToggle(boolean isExpand, RecyclerView.ViewHolder holder) {
+                ViewNodeBinder.ViewHolder dirViewHolder = (ViewNodeBinder.ViewHolder) holder;
+                final ImageView ivArrow = dirViewHolder.arrow;
+                int rotateDegree = isExpand ? 90 : -90;
+                ivArrow.animate().rotationBy(rotateDegree).start();
+            }
+        });
+        rv.setAdapter(adapter);
+
     }
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(drawerSub)) {
-            drawer.closeDrawer(drawerSub);
+        if (drawer.isDrawerOpen(drawerSub) || drawer.isDrawerOpen(drawerSub2)) {
+            drawer.closeDrawers();
         } else
             super.onBackPressed();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        drawer.closeDrawers();
         switch (item.getItemId()) {
             case R.id.debug:
                 if (drawer.isDrawerOpen(drawerSub))
                     drawer.closeDrawer(drawerSub);
                 else
                     drawer.openDrawer(drawerSub);
+                break;
+            case R.id.component_tree:
+                if (drawer.isDrawerOpen(drawerSub2))
+                    drawer.closeDrawer(drawerSub2);
+                else
+                    drawer.openDrawer(drawerSub2);
                 break;
             case R.id.display_view:
                 outlineView.setDisplayType(OutlineView.DISPLAY_VIEW);

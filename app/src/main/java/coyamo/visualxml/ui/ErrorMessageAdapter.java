@@ -52,7 +52,7 @@ public class ErrorMessageAdapter extends RecyclerView.Adapter<ErrorMessageAdapte
         switch (fruit.getType()) {
             case XmlMessage.TYPE_DEBUG:
                 holder.text.setTextColor(Color.BLACK);
-                holder.icon.setImageResource(R.drawable.ic_debug2);
+                holder.icon.setImageResource(R.drawable.ic_issue);
                 break;
             case XmlMessage.TYPE_ERROR:
                 holder.text.setTextColor(Color.RED);
@@ -60,7 +60,7 @@ public class ErrorMessageAdapter extends RecyclerView.Adapter<ErrorMessageAdapte
                 break;
             case XmlMessage.TYPE_WARN:
                 holder.text.setTextColor(Color.GRAY);
-                holder.icon.setImageResource(R.drawable.ic_warn);
+                holder.icon.setImageResource(R.drawable.ic_warning);
                 break;
         }
 
