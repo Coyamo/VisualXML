@@ -2,4 +2,8 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light"></style>
+
+    <style name="TabLayoutTextStyle" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+    </style>
 </resources>

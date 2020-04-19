@@ -38,6 +38,19 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.widget.VideoView;
 
+import androidx.cardview.widget.CardView;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -92,10 +105,20 @@ public class ViewBean implements LayoutItemType {
         imgMap.put("include", R.drawable.ic_palette_include);
         imgMap.put(GridLayout.class.getSimpleName(), R.drawable.ic_palette_grid_layout);
         imgMap.put(GridView.class.getSimpleName(), R.drawable.ic_palette_grid_view);
-        imgMap.put("RecyclerView", R.drawable.ic_palette_recycler_view);
+        imgMap.put(RecyclerView.class.getSimpleName(), R.drawable.ic_palette_recycler_view);
         imgMap.put(ListView.class.getSimpleName(), R.drawable.ic_palette_list_view);
         imgMap.put(TabHost.class.getSimpleName(), R.drawable.ic_palette_tab_host);
         imgMap.put(RelativeLayout.class.getSimpleName(), R.drawable.ic_palette_relative_layout);
+        imgMap.put(Chip.class.getSimpleName(), R.drawable.ic_palette_chip);
+        imgMap.put(ChipGroup.class.getSimpleName(), R.drawable.ic_palette_chip_group);
+        imgMap.put(FloatingActionButton.class.getSimpleName(), R.drawable.ic_palette_floating_action_button);
+        imgMap.put(NestedScrollView.class.getSimpleName(), R.drawable.ic_palette_nested_scroll_view);
+        imgMap.put(ViewPager.class.getSimpleName(), R.drawable.ic_palette_view_pager);
+        imgMap.put(ViewPager2.class.getSimpleName(), R.drawable.ic_palette_view_pager);
+        imgMap.put(CardView.class.getSimpleName(), R.drawable.ic_palette_card_view);
+        imgMap.put(AppBarLayout.class.getSimpleName(), R.drawable.ic_palette_app_bar_layout);
+        imgMap.put(NavigationView.class.getSimpleName(), R.drawable.ic_palette_navigation_view);
+        imgMap.put(BottomNavigationView.class.getSimpleName(), R.drawable.ic_palette_bottom_navigation_view);
 
     }
 
@@ -149,7 +172,4 @@ public class ViewBean implements LayoutItemType {
         return arrowId;
     }
 
-    public void setArrowId(int arrowId) {
-        this.arrowId = arrowId;
-    }
 }

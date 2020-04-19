@@ -5,8 +5,8 @@
         android:id="@+id/debug"
         android:icon="@drawable/ic_debug"
         android:orderInCategory="0"
-        app:showAsAction="always"
-        android:title="debug" />
+        android:title="debug"
+        app:showAsAction="always" />
     <item
         android:id="@+id/component_tree"
         android:icon="@drawable/ic_component_tree"

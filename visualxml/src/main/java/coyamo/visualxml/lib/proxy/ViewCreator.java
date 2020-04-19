@@ -7,9 +7,11 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import coyamo.visualxml.lib.ui.DefaultView;
 import coyamo.visualxml.lib.ui.proxy.BlinkLayout;
+import coyamo.visualxml.lib.utils.MessageArray;
 
 public class ViewCreator {
     //private static final String TAG_MERGE = "merge";
@@ -27,14 +29,18 @@ public class ViewCreator {
     public static View create(@NonNull String name, @NonNull Context ctx) {
         if (name.startsWith("coyamo.visualxml.")) return createDefault(ctx, name);
         View v = null;
-        if (isFullPackage(name)) v = _create(name, ctx);
-        if (v == null) v = createSpecial(name, ctx);
-        if (v == null) {
-            for (String prefix : sClassPrefixList) {
-                v = _create(prefix + name, ctx);
-                if (v != null) return v;
+        if (isFullPackage(name)) {
+            v = _create(name, ctx);
+        } else {
+            v = createSpecial(name, ctx);
+            if (v == null) {
+                for (String prefix : sClassPrefixList) {
+                    v = _create(prefix + name, ctx);
+                    if (v != null) return v;
+                }
             }
         }
+
         if (v == null) return createDefault(ctx, name);
         return v;
     }
@@ -42,12 +48,15 @@ public class ViewCreator {
     public static View create(@NonNull String name, @NonNull Context ctx, int defStyle) {
         if (name.startsWith("coyamo.visualxml.")) return createDefault(ctx, name);
         View v = null;
-        if (isFullPackage(name)) v = _create(name, ctx, defStyle);
-        if (v == null) v = createSpecial(name, ctx);
-        if (v == null) {
-            for (String prefix : sClassPrefixList) {
-                v = _create(prefix + name, ctx, defStyle);
-                if (v != null) return v;
+        if (isFullPackage(name)) {
+            v = _create(name, ctx, defStyle);
+        } else {
+            v = createSpecial(name, ctx);
+            if (v == null) {
+                for (String prefix : sClassPrefixList) {
+                    v = _create(prefix + name, ctx, defStyle);
+                    if (v != null) return v;
+                }
             }
         }
         if (v == null) return createDefault(ctx, name);
@@ -66,17 +75,25 @@ public class ViewCreator {
             Constructor<?> con = clazz.getDeclaredConstructor(Context.class);
             con.setAccessible(true);
             return (View) con.newInstance(ctx);
+        } catch (ClassNotFoundException e2) {
+
+        } catch (InvocationTargetException e1) {
+            MessageArray.getInstanse().logW("在创建 " + name + " 时：" + e1.getCause().toString());
         } catch (Exception e) {
         }
         return null;
     }
 
-    private static View _create(@NonNull String cla, @NonNull Context ctx, int defstyle) {
+    private static View _create(@NonNull String name, @NonNull Context ctx, int defStyle) {
         try {
-            Class<?> clazz = Class.forName(cla);
+            Class<?> clazz = Class.forName(name);
             Constructor<?> con = clazz.getDeclaredConstructor(Context.class, AttributeSet.class, int.class);
             con.setAccessible(true);
-            return (View) con.newInstance(ctx, null, defstyle);
+            return (View) con.newInstance(ctx, null, defStyle);
+        } catch (ClassNotFoundException e2) {
+
+        } catch (InvocationTargetException e1) {
+            MessageArray.getInstanse().logW("在创建 " + name + " 时：" + e1.getCause().toString());
         } catch (Exception e) {
         }
         return null;
@@ -98,7 +115,10 @@ public class ViewCreator {
     }
 
     public static String getNameFromTag(@NonNull String s) {
-        if (isFullPackage(s)) return s.substring(s.lastIndexOf("."));
+        try {
+            if (isFullPackage(s)) return s.substring(s.lastIndexOf(".") + 1);
+        } catch (Exception e) {
+        }
         return s;
     }
 }

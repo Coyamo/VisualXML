@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorPrimary">#EEEEEE</color>
+    <color name="colorPrimaryDark">#BDBDBD</color>
+    <color name="subBarColor">#e2e6ec</color>
+    <color name="subBarColor2">#f2f2f2</color>
+    <color name="colorAccent">#4084C9</color>
+    <color name="divider">#C0C0C0</color>
+    <color name="textColorPrimary">#000000</color>
 </resources>

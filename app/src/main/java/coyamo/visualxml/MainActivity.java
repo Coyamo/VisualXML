@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import coyamo.visualxml.lib.proxy.ProxyResources;
-import coyamo.visualxml.ui.ResourcePagerAdapter;
-import coyamo.visualxml.ui.SignAdapter;
+import coyamo.visualxml.ui.adapter.ResourcePagerAdapter;
+import coyamo.visualxml.ui.adapter.SignAdapter;
 
 public class MainActivity extends AppCompatActivity {
     private EditText editor;
@@ -35,8 +35,9 @@ public class MainActivity extends AppCompatActivity {
     //private ProxyResources resources;
     private DrawerLayout drawer;
     private LinearLayout drawerSub;
-    private Button add;
+    private ImageButton add;
     private TabLayout tab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

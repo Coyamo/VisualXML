@@ -12,7 +12,7 @@ import android.graphics.drawable.Drawable;
  * This drawable will draw a simple white and gray chessboard pattern.
  * It's the pattern you will often see as a background behind a partly transparent image in many applications.
  */
-class AlphaPatternDrawable extends Drawable {
+public class AlphaPatternDrawable extends Drawable {
 
     private int rectangleSize = 10;
 
@@ -30,7 +30,7 @@ class AlphaPatternDrawable extends Drawable {
      */
     private Bitmap bitmap;
 
-    AlphaPatternDrawable(int rectangleSize) {
+    public AlphaPatternDrawable(int rectangleSize) {
         this.rectangleSize = rectangleSize;
         paintWhite.setColor(0xFFF1F1F1);
         paintGray.setColor(0xFFCDCDCD);

@@ -7,21 +7,31 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Pair;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class OutlineView extends LinearLayout {
     public static final int DISPLAY_VIEW = 0;
     public static final int DISPLAY_DESIGN = 1;
     public static final int DISPLAY_BLUEPRINT = 2;
-    Paint paint;
+    private Paint paint;
+    private boolean interceptTouchEvent = true;
     private int displayType = DISPLAY_DESIGN;
-    private List<Rect> bounds = new ArrayList<>();
-
+    private OnOutlineClickListener listener;
+    //排序后作为标记 防止多余的排序
+    private boolean isSorted;
+    private boolean isSelect;
+    private View selectView;
+    private Rect selectedRect;
+    private List<Pair<View, Rect>> pairArrayList = new ArrayList<>();
     public OutlineView(Context ctx) {
         super(ctx);
         init();
@@ -32,11 +42,100 @@ public class OutlineView extends LinearLayout {
         init();
     }
 
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        return interceptTouchEvent;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                //允许传递点击事件时不触发选中事件
+                if (!interceptTouchEvent) return super.onTouchEvent(event);
+
+                if (!isSorted) sort(pairArrayList);
+                for (Pair<View, Rect> pair : pairArrayList) {
+                    if (isInRect(pair.second, event.getRawX(), event.getRawY())) {
+                        selectedRect = pair.second;
+                        isSelect = true;
+                        selectView = pair.first;
+                        invalidate();
+                        return true;
+                    }
+                }
+                isSorted = false;
+                break;
+            case MotionEvent.ACTION_UP:
+                if (isSelect) {
+                    if (listener != null) listener.onClick(selectView, displayType);
+                }
+                break;
+        }
+        return super.onTouchEvent(event);
+    }
+
+    //xy相对于屏幕
+    private boolean isInRect(Rect rect, float x, float y) {
+        Rect r = new Rect();
+        getGlobalVisibleRect(r);
+
+        //转化为相对OutlineView的坐标
+        x = x - r.left;
+        y = y - r.top;
+
+        return x > rect.left && x < rect.right && y > rect.top && y < rect.bottom;
+    }
+
+    //按面积排序，小的在前
+    private void sort(List<Pair<View, Rect>> pairArrayList) {
+        Collections.sort(pairArrayList, new Comparator<Pair<View, Rect>>() {
+            @Override
+            public int compare(Pair<View, Rect> o1, Pair<View, Rect> o2) {
+                int w1 = o1.second.right - o1.second.left;
+                int h1 = o1.second.bottom - o1.second.top;
+                int size1 = w1 * h1;
+
+                int w2 = o2.second.right - o2.second.left;
+                int h2 = o2.second.bottom - o2.second.top;
+                int size2 = w2 * h2;
+
+                return size1 - size2;
+            }
+        });
+        //标记
+        isSorted = true;
+       /* for(Pair<View,Rect> pair:pairArrayList){
+            int w1=pair.second.right-pair.second.left;
+            int h1=pair.second.bottom-pair.second.top;
+            int size1=w1*h1;
+            Log.d("debug",w1+"*"+h1+"="+size1);
+        }*/
+
+    }
+
     public int getDisplayType() {
         return displayType;
     }
 
+    public boolean isInterceptTouchEvent() {
+        return interceptTouchEvent;
+    }
+
+    public void setInterceptTouchEvent(boolean interceptTouchEvent) {
+        this.interceptTouchEvent = interceptTouchEvent;
+    }
+
     public void setDisplayType(int displayType) {
+        switch (displayType) {
+            case DISPLAY_BLUEPRINT:
+            case DISPLAY_DESIGN:
+                setInterceptTouchEvent(true);
+                break;
+            case DISPLAY_VIEW:
+                setInterceptTouchEvent(false);
+                break;
+        }
         this.displayType = displayType;
         invalidate();
     }
@@ -48,20 +147,48 @@ public class OutlineView extends LinearLayout {
         setFocusable(true);
     }
 
+    public void select(View v) {
+        for (Pair<View, Rect> pair : pairArrayList) {
+            if (v == pair.first) {
+                selectedRect = pair.second;
+                selectView = v;
+            }
+        }
+        invalidate();
+    }
     @Override
     protected void dispatchDraw(Canvas canvas) {
+
         switch (displayType) {
             case DISPLAY_BLUEPRINT:
                 toBlueprintPaint();
-                for (Rect bound : bounds) {
-                    canvas.drawRect(fixRect(bound), paint);
+                for (Pair<View, Rect> bound : pairArrayList) {
+                    canvas.drawRect(fixRect(bound.second), paint);
                 }
                 break;
             case DISPLAY_DESIGN:
-                toDesignPaint();
                 super.dispatchDraw(canvas);
-                for (Rect bound : bounds) {
-                    canvas.drawRect(fixRect(bound), paint);
+                for (Pair<View, Rect> bound : pairArrayList) {
+                    if (selectedRect != null && selectedRect.equals(bound.second)) {
+                        toSelectPaint();
+                        //绘制4个球球
+                        int r = 10;
+                        int cx = (selectedRect.left + selectedRect.right) / 2;
+                        int cy = (selectedRect.bottom + selectedRect.top) / 2;
+                        //top
+                        canvas.drawCircle(cx, selectedRect.top + paint.getStrokeWidth() / 2, r, paint);
+                        //bottom
+                        canvas.drawCircle(cx, selectedRect.bottom - paint.getStrokeWidth() / 2, r, paint);
+                        //left
+                        canvas.drawCircle(selectedRect.left + paint.getStrokeWidth() / 2, cy, r, paint);
+                        //right
+                        canvas.drawCircle(selectedRect.right - paint.getStrokeWidth() / 2, cy, r, paint);
+
+                        paint.setStyle(Paint.Style.STROKE);
+                    } else {
+                        toDesignPaint();
+                    }
+                    canvas.drawRect(fixRect(bound.second), paint);
                 }
                 break;
             case DISPLAY_VIEW:
@@ -84,11 +211,14 @@ public class OutlineView extends LinearLayout {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-        freshOutline();
+        refreshOutline();
+        //重置标记
+        isSorted = false;
+        selectedRect = null;
     }
 
-    private void freshOutline() {
-        bounds.clear();
+    private void refreshOutline() {
+        pairArrayList.clear();
         refreshOutline(OutlineView.this, OutlineView.this);
     }
 
@@ -108,7 +238,7 @@ public class OutlineView extends LinearLayout {
             rect.right -= topRect.left;
             rect.bottom -= topRect.top;
 
-            bounds.add(rect);
+            pairArrayList.add(new Pair<>(child, rect));
             if (child instanceof ViewGroup) {
                 refreshOutline((ViewGroup) child, topView);
             }
@@ -117,14 +247,37 @@ public class OutlineView extends LinearLayout {
     }
 
     private void toBlueprintPaint() {
+        paint.setStyle(Paint.Style.STROKE);
         paint.setPathEffect(new DashPathEffect(new float[]{5, 5}, 0));
         paint.setStrokeWidth(2);
         paint.setColor(0xff40c4ff);
     }
 
     private void toDesignPaint() {
+        paint.setStyle(Paint.Style.STROKE);
         paint.setPathEffect(new DashPathEffect(new float[]{5, 5}, 0));
         paint.setStrokeWidth(1);
         paint.setColor(Color.GRAY);
     }
+
+    private void toSelectPaint() {
+        paint.setStyle(Paint.Style.FILL);
+        paint.setPathEffect(null);
+        paint.setStrokeWidth(4);
+        paint.setColor(0xFF1886f7);
+    }
+
+    public OnOutlineClickListener getListener() {
+        return listener;
+    }
+
+    public void setListener(OnOutlineClickListener listener) {
+        this.listener = listener;
+    }
+
+    public interface OnOutlineClickListener {
+        void onClick(View v, int displayType);
+    }
+
+
 }

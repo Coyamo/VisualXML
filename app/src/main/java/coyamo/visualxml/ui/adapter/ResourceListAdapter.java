@@ -1,6 +1,5 @@
-package coyamo.visualxml.ui;
+package coyamo.visualxml.ui.adapter;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -10,14 +9,16 @@ import android.graphics.drawable.DrawableWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.Map;
 import coyamo.visualxml.R;
 import coyamo.visualxml.lib.proxy.ProxyResources;
 import coyamo.visualxml.lib.utils.Utils;
+import coyamo.visualxml.ui.AlphaPatternDrawable;
 
 public class ResourceListAdapter extends RecyclerView.Adapter<ResourceListAdapter.ViewHolder> {
     private Map<String, String> map;
@@ -98,9 +100,7 @@ public class ResourceListAdapter extends RecyclerView.Adapter<ResourceListAdapte
                     cd.setColor(Color.parseColor(value));
                     cd.setBounds(0, 0, 64, 64);
                     holder.icon.setImageDrawable(cd);
-                }
-
-                else
+                } else
                     Toast.makeText(holder.item.getContext(), "颜色格式错误", Toast.LENGTH_SHORT).show();
                 break;
 
@@ -119,10 +119,11 @@ public class ResourceListAdapter extends RecyclerView.Adapter<ResourceListAdapte
         LinearLayout ll = new LinearLayout(ctx);
         ll.setPadding(p, pt, p, pb);
         ll.setOrientation(LinearLayout.VERTICAL);
-        final EditText n = new EditText(ctx);
+
+        final TextInputEditText n = new TextInputEditText(ctx);
         n.setHint("名字");
 
-        final EditText va = new EditText(ctx);
+        final TextInputEditText va = new TextInputEditText(ctx);
         ll.addView(n);
         ll.addView(va);
         va.setHint("值");

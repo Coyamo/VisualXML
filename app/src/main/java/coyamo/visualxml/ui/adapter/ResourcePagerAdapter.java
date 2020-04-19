@@ -1,4 +1,4 @@
-package coyamo.visualxml.ui;
+package coyamo.visualxml.ui.adapter;
 
 import android.content.Context;
 import android.view.View;

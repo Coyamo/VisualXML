@@ -1,4 +1,4 @@
-package coyamo.visualxml.ui;
+package coyamo.visualxml.ui.adapter;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;

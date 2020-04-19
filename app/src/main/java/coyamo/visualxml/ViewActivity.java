@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -23,7 +24,7 @@ import coyamo.visualxml.lib.parser.ReadOnlyParser;
 import coyamo.visualxml.lib.proxy.ProxyResources;
 import coyamo.visualxml.lib.ui.OutlineView;
 import coyamo.visualxml.lib.utils.MessageArray;
-import coyamo.visualxml.ui.ErrorMessageAdapter;
+import coyamo.visualxml.ui.adapter.ErrorMessageAdapter;
 import coyamo.visualxml.ui.treeview.ViewBean;
 import coyamo.visualxml.ui.treeview.ViewNodeBinder;
 import tellh.com.recyclertreeview_lib.TreeNode;
@@ -130,6 +131,12 @@ public class ViewActivity extends AppCompatActivity {
                 drawer.openDrawer(drawerSub);
         }
 
+        outlineView.setListener(new OutlineView.OnOutlineClickListener() {
+            @Override
+            public void onClick(View v, int displayType) {
+                Toast.makeText(ViewActivity.this, v.getClass().getSimpleName(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 

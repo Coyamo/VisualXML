@@ -9,8 +9,7 @@
         android:id="@+id/resource_item_icon"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_centerVertical="true"
-        android:elevation="2dp" />
+        android:layout_centerVertical="true" />
 
     <LinearLayout
         android:id="@+id/resource_item_ll"
@@ -19,7 +18,7 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        android:layout_toRightOf="@id/resource_item_icon"
+        android:layout_toEndOf="@id/resource_item_icon"
         android:gravity="center_vertical"
         android:orientation="vertical">
 
@@ -27,9 +26,9 @@
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="left"
+            android:gravity="end"
             android:padding="2dp"
-            android:textColor="#000000"
+            android:textColor="@color/textColorPrimary"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -37,9 +36,8 @@
             android:id="@+id/value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="left"
+            android:gravity="start"
             android:padding="2dp"
-            android:textStyle="italic"
             android:typeface="monospace" />
     </LinearLayout>
 
@@ -50,7 +48,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        android:layout_toRightOf="@id/resource_item_icon"
-        android:background="#C0C0C0" />
+        android:layout_toEndOf="@id/resource_item_icon"
+        android:background="@color/divider" />
 
 </RelativeLayout>

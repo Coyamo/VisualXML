@@ -1,4 +1,4 @@
-package coyamo.visualxml.ui;
+package coyamo.visualxml.ui.adapter;
 
 import android.view.View;
 import android.view.ViewGroup;

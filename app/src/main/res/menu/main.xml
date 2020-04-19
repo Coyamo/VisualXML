@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-   
+
     <item
         android:id="@+id/run"
         android:icon="@drawable/ic_run"
         android:orderInCategory="2"
-        app:showAsAction="always"
-        android:title="查看" />
+        android:title="查看"
+        app:showAsAction="always" />
     <item
         android:id="@+id/res"
         android:icon="@drawable/ic_visual_assets"
         android:orderInCategory="3"
-        app:showAsAction="always"
-        android:title="管理资源" />
-	
+        android:title="管理资源"
+        app:showAsAction="always" />
+
     <item
         android:id="@+id/about"
         android:icon="@drawable/ic_about"
         android:orderInCategory="5"
-        app:showAsAction="always"
-        android:title="关于" />
+        android:title="关于"
+        app:showAsAction="always" />
 </menu>
