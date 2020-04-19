@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -26,12 +27,12 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <View
+            <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
-                android:background="@drawable/ic_debug"
+                app:srcCompat="@drawable/ic_debug"
                 android:padding="5dp" />
 
             <TextView
@@ -70,12 +71,12 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <View
+            <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
-                android:background="@drawable/ic_component_tree"
+                app:srcCompat="@drawable/ic_component_tree"
                 android:clickable="true"
                 android:focusable="true"
                 android:padding="5dp" />

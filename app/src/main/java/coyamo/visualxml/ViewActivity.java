@@ -39,7 +39,6 @@ public class ViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view);
-
         drawer = findViewById(R.id.drawerLayout);
         drawerSub = findViewById(R.id.drawer_sub);
         drawerSub2 = findViewById(R.id.drawer_sub2);

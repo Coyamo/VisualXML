@@ -20,9 +20,9 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_above="@id/sign_list"
-            android:background="?android:attr/dividerVertical" />
+            android:background="@color/divider" />
 
-        <EditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editor"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -46,13 +46,13 @@
             android:layout_height="48dp"
             android:background="@color/subBarColor">
 
-            <View
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/title_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
-                android:background="@drawable/ic_visual_assets"
+                app:srcCompat="@drawable/ic_visual_assets"
                 android:padding="5dp" />
 
             <TextView
@@ -66,13 +66,13 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <ImageButton
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/title_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_add" />
+                app:srcCompat="@drawable/ic_add" />
         </RelativeLayout>
 
         <View
