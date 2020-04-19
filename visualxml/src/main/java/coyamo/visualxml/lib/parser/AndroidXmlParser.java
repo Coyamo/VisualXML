@@ -43,8 +43,7 @@ public class AndroidXmlParser {
     }
 
     public static AndroidXmlParser with(ViewGroup container) {
-        AndroidXmlParser axp = new AndroidXmlParser(container.getContext(), container);
-        return axp;
+        return new AndroidXmlParser(container.getContext(), container);
     }
 
 

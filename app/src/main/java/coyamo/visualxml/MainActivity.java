@@ -31,7 +31,6 @@ import coyamo.visualxml.ui.adapter.SignAdapter;
 
 public class MainActivity extends AppCompatActivity {
     private EditText editor;
-    private RecyclerView signlist;
     //private ProxyResources resources;
     private DrawerLayout drawer;
     private LinearLayout drawerSub;
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         drawerSub = findViewById(R.id.main_drawer_sub);
         drawer = findViewById(R.id.maindrawerLayout);
         editor = findViewById(R.id.editor);
-        signlist = findViewById(R.id.sign_list);
+        RecyclerView signlist = findViewById(R.id.sign_list);
         //resources = ProxyResources.getInstance();
 
         ActionBar actionBar = getSupportActionBar();

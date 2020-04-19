@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
@@ -32,7 +32,6 @@ import tellh.com.recyclertreeview_lib.TreeViewAdapter;
 
 public class ViewActivity extends AppCompatActivity {
     private OutlineView outlineView;
-    private RecyclerView rv;
     private DrawerLayout drawer;
     private LinearLayout drawerSub, drawerSub2;
 
@@ -45,7 +44,7 @@ public class ViewActivity extends AppCompatActivity {
         drawerSub = findViewById(R.id.drawer_sub);
         drawerSub2 = findViewById(R.id.drawer_sub2);
         outlineView = findViewById(R.id.outline_view);
-        rv = findViewById(R.id.err_list);
+        RecyclerView rv = findViewById(R.id.err_list);
         rv.setAdapter(new ErrorMessageAdapter());
         rv.setLayoutManager(new LinearLayoutManager(this));
         ProxyResources.getInstance().getViewIdMap().clear();
@@ -131,6 +130,7 @@ public class ViewActivity extends AppCompatActivity {
                 drawer.openDrawer(drawerSub);
         }
 
+        outlineView.setHoldOutline(false);
         outlineView.setListener(new OutlineView.OnOutlineClickListener() {
             @Override
             public void onClick(View v, int displayType) {
@@ -145,7 +145,7 @@ public class ViewActivity extends AppCompatActivity {
         RecyclerView rv = findViewById(R.id.view_tree);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
-        TreeViewAdapter adapter = new TreeViewAdapter(nodes, Arrays.asList(new ViewNodeBinder()));
+        TreeViewAdapter adapter = new TreeViewAdapter(nodes, Collections.singletonList(new ViewNodeBinder()));
         adapter.setOnTreeNodeListener(new TreeViewAdapter.OnTreeNodeListener() {
             @Override
             public boolean onClick(TreeNode node, RecyclerView.ViewHolder holder) {

@@ -29,9 +29,11 @@ public class OutlineView extends LinearLayout {
     //排序后作为标记 防止多余的排序
     private boolean isSorted;
     private boolean isSelect;
+    private boolean isHoldOutline = true;
     private View selectView;
     private Rect selectedRect;
     private List<Pair<View, Rect>> pairArrayList = new ArrayList<>();
+
     public OutlineView(Context ctx) {
         super(ctx);
         init();
@@ -64,11 +66,25 @@ public class OutlineView extends LinearLayout {
                         return true;
                     }
                 }
-                isSorted = false;
+                isSelect = false;
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                if (isSelect) {
+                    if (!isHoldOutline) {
+                        removeSelect();
+                    }
+                }
                 break;
             case MotionEvent.ACTION_UP:
+                //在松手时触发
+                //必须是在rect内
                 if (isSelect) {
-                    if (listener != null) listener.onClick(selectView, displayType);
+                    if (isInRect(selectedRect, event.getRawX(), event.getRawY()) && listener != null) {
+                        listener.onClick(selectView, displayType);
+                    }
+                    if (!isHoldOutline) {
+                        removeSelect();
+                    }
                 }
                 break;
         }
@@ -114,18 +130,38 @@ public class OutlineView extends LinearLayout {
 
     }
 
+    /**
+     * 判断在触发选中边框后是否保留边框
+     *
+     * @return
+     */
+    public boolean isHoldOutline() {
+        return isHoldOutline;
+    }
+
+    /**
+     * 设置在触发选中边框后是否保留边框
+     *
+     * @param holdOutline
+     */
+    public void setHoldOutline(boolean holdOutline) {
+        isHoldOutline = holdOutline;
+    }
+
+
+    /**
+     * 获取显示的类型
+     *
+     * @return
+     */
     public int getDisplayType() {
         return displayType;
     }
 
-    public boolean isInterceptTouchEvent() {
-        return interceptTouchEvent;
-    }
-
-    public void setInterceptTouchEvent(boolean interceptTouchEvent) {
-        this.interceptTouchEvent = interceptTouchEvent;
-    }
-
+    /**
+     * 设置显示的类型
+     * @param displayType
+     */
     public void setDisplayType(int displayType) {
         switch (displayType) {
             case DISPLAY_BLUEPRINT:
@@ -140,6 +176,24 @@ public class OutlineView extends LinearLayout {
         invalidate();
     }
 
+    /**
+     * 是否拦截子View触摸事件
+     *
+     * @return
+     */
+    public boolean isInterceptTouchEvent() {
+        return interceptTouchEvent;
+    }
+
+    /**
+     * 设置是否拦截子View触摸事件
+     *
+     * @param interceptTouchEvent
+     */
+    public void setInterceptTouchEvent(boolean interceptTouchEvent) {
+        this.interceptTouchEvent = interceptTouchEvent;
+    }
+
     private void init() {
         setWillNotDraw(false);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -147,6 +201,10 @@ public class OutlineView extends LinearLayout {
         setFocusable(true);
     }
 
+    /**
+     * 如果View在group内。就显示选中的边框
+     * @param v
+     */
     public void select(View v) {
         for (Pair<View, Rect> pair : pairArrayList) {
             if (v == pair.first) {
@@ -154,8 +212,18 @@ public class OutlineView extends LinearLayout {
                 selectView = v;
             }
         }
+
+    }
+
+    /**
+     * 移除选中状态
+     */
+    public void removeSelect() {
+        selectedRect = null;
+        selectView = null;
         invalidate();
     }
+
     @Override
     protected void dispatchDraw(Canvas canvas) {
 

@@ -78,6 +78,7 @@ public class ViewCreator {
         } catch (ClassNotFoundException e2) {
 
         } catch (InvocationTargetException e1) {
+            //这种情况可能出现在view存在，不过需要特定的Theme才可以使用
             MessageArray.getInstanse().logW("在创建 " + name + " 时：" + e1.getCause().toString());
         } catch (Exception e) {
         }
