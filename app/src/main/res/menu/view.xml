@@ -2,21 +2,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/toggle_edit"
+        android:orderInCategory="0"
+        android:title="模式"
+        app:actionProviderClass="coyamo.visualxml.ui.menu.CheckBoxActionProvider"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/debug"
         android:icon="@drawable/ic_debug"
-        android:orderInCategory="0"
+        android:orderInCategory="1"
         android:title="debug"
         app:showAsAction="always" />
     <item
         android:id="@+id/component_tree"
         android:icon="@drawable/ic_component_tree"
-        android:orderInCategory="1"
+        android:orderInCategory="2"
         android:title="控件树"
         app:showAsAction="always" />
     <item
         android:id="@+id/change"
         android:icon="@drawable/ic_view_mode"
-        android:orderInCategory="2"
+        android:orderInCategory="3"
         android:title="切换"
         app:showAsAction="always">
         <menu>

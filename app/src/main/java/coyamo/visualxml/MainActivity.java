@@ -31,6 +31,10 @@ import coyamo.visualxml.ui.adapter.ResourcePagerAdapter;
 import coyamo.visualxml.ui.adapter.SignAdapter;
 
 public class MainActivity extends AppCompatActivity {
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
     private EditText editor;
     //private ProxyResources resources;
     private DrawerLayout drawer;
@@ -38,9 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton add;
     private TabLayout tab;
 
-    static {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

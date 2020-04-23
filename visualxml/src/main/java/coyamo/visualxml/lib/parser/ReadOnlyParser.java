@@ -3,6 +3,11 @@ package coyamo.visualxml.lib.parser;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+//注意 这个类只是为了防止影响到解析
+//不是保留XmlPullParser的状态
+//XmlPullParser对象内还是在执行的
+//所以得到这个对象时要自己保存需要的数据
+//否则XmlPullParser会指向其他位置了
 public class ReadOnlyParser {
     private XmlPullParser parser;
 

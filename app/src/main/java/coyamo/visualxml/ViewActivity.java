@@ -7,9 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,7 +25,9 @@ import coyamo.visualxml.lib.parser.ReadOnlyParser;
 import coyamo.visualxml.lib.proxy.ProxyResources;
 import coyamo.visualxml.lib.ui.OutlineView;
 import coyamo.visualxml.lib.utils.MessageArray;
+import coyamo.visualxml.lib.utils.Utils;
 import coyamo.visualxml.ui.adapter.ErrorMessageAdapter;
+import coyamo.visualxml.ui.menu.CheckBoxActionProvider;
 import coyamo.visualxml.ui.treeview.ViewBean;
 import coyamo.visualxml.ui.treeview.ViewNodeBinder;
 import tellh.com.recyclertreeview_lib.TreeNode;
@@ -34,7 +37,7 @@ public class ViewActivity extends AppCompatActivity {
     private OutlineView outlineView;
     private DrawerLayout drawer;
     private LinearLayout drawerSub, drawerSub2;
-
+    private boolean isEditMode = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +61,7 @@ public class ViewActivity extends AppCompatActivity {
                     .setOnParseListener(new AndroidXmlParser.OnParseListener() {
                         @Override
                         public void onAddChildView(View v, ReadOnlyParser parser) {
-                            ViewBean bean = new ViewBean(parser);
+                            ViewBean bean = new ViewBean(v, parser);
                             bean.setViewGroup(v instanceof ViewGroup);
 
                             TreeNode<ViewBean> child = new TreeNode<>(bean);
@@ -77,7 +80,7 @@ public class ViewActivity extends AppCompatActivity {
 
                         @Override
                         public void onJoin(ViewGroup viewGroup, ReadOnlyParser parser) {
-                            ViewBean bean = new ViewBean(parser);
+                            ViewBean bean = new ViewBean(viewGroup, parser);
                             bean.setViewGroup(true);
 
                             //生成group
@@ -130,10 +133,52 @@ public class ViewActivity extends AppCompatActivity {
         }
 
         outlineView.setHoldOutline(false);
-        outlineView.setListener(new OutlineView.OnOutlineClickListener() {
+
+
+        /*outlineView.setOutlineLongClickListener(new OutlineView.OnOutlineLongClickListener() {
+            @Override
+            public boolean onLongClick(View v, int displayType) {
+                Log.d("test",v.getClass().getSimpleName()+"  long click");
+                return false;
+            }
+        });*/
+
+
+        //添加一个笔和眼睛切换的图标在toolbar
+        //切换编辑模式 和 查看数据模式
+        //设计模式和蓝图模式可以考虑现实不同的东西
+        outlineView.setOutlineClickListener(new OutlineView.OnOutlineClickListener() {
+            @Override
+            public void onDown(final View v, int displayType) {
+                if (!isEditMode) {
+
+                }
+            }
+
+            @Override
+            public void onCancel(View v, int displayType) {
+
+            }
+
             @Override
             public void onClick(View v, int displayType) {
-                Toast.makeText(ViewActivity.this, v.getClass().getSimpleName(), Toast.LENGTH_SHORT).show();
+                if (isEditMode) {
+                    ViewBean bean = findBeanByView(nodes, v);
+                    StringBuilder sb = new StringBuilder();
+                    if (bean != null) {
+
+                        for (ViewBean.ViewInfo info : bean.getInfoList()) {
+                            sb.append(info.getAttributeName())
+                                    .append("=")
+                                    .append(info.getAttributeValue())
+                                    .append("\n");
+                        }
+                    }
+                    new AlertDialog.Builder(ViewActivity.this)
+                            .setMessage(sb)
+                            .show();
+                }
+
             }
         });
 
@@ -145,16 +190,21 @@ public class ViewActivity extends AppCompatActivity {
         rv.setLayoutManager(new LinearLayoutManager(this));
 
         TreeViewAdapter adapter = new TreeViewAdapter(nodes, Collections.singletonList(new ViewNodeBinder()));
+        adapter.setPadding((int) Utils.dp2px(this, 16));
         adapter.setOnTreeNodeListener(new TreeViewAdapter.OnTreeNodeListener() {
             @Override
+            public boolean onLongClick(TreeNode node, RecyclerView.ViewHolder holder) {
+                ViewBean viewBean = (ViewBean) node.getContent();
+
+                return true;
+            }
+
+            @Override
             public boolean onClick(TreeNode node, RecyclerView.ViewHolder holder) {
-
                 ViewBean type = (ViewBean) node.getContent();
-
                 if (type.isViewGroup()) {
                     onToggle(!node.isExpand(), holder);
                 }
-
                 return false;
             }
 
@@ -170,6 +220,18 @@ public class ViewActivity extends AppCompatActivity {
 
     }
 
+    private ViewBean findBeanByView(List<TreeNode> nodes, View v) {
+        for (TreeNode node : nodes) {
+            ViewBean bean = (ViewBean) node.getContent();
+            if (bean.getView() == v) {
+                return bean;
+            } else {
+                bean = findBeanByView(node.getChildList(), v);
+                if (bean != null) return bean;
+            }
+        }
+        return null;
+    }
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(drawerSub) || drawer.isDrawerOpen(drawerSub2)) {
@@ -210,6 +272,14 @@ public class ViewActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.view, menu);
+        CheckBoxActionProvider p = (CheckBoxActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.toggle_edit));
+        p.setOnCheckedChangeListener(new CheckBoxActionProvider.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(View buttonView, boolean isChecked) {
+                isEditMode = !isChecked;
+                outlineView.setHoldOutline(isChecked);
+            }
+        });
         return true;
     }
 }

@@ -51,7 +51,9 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import coyamo.visualxml.R;
@@ -127,11 +129,27 @@ public class ViewBean implements LayoutItemType {
     private String tagName;
     private int arrowId = R.drawable.ic_arrow;
 
-    public ViewBean(ReadOnlyParser parser) {
+    private List<ViewInfo> infoList = new ArrayList<>();
+    private View view;
+
+    public ViewBean(View v, ReadOnlyParser parser) {
+        view = v;
         String id = parser.getAttributeValueInAndroid("id");
         if (id != null) id = ProxyResources.parseReferName(id);
         setId(id);
         setTagName(ViewCreator.getNameFromTag(parser.getName()));
+
+        for (int i = 0; i < parser.getAttributeCount(); i++) {
+            infoList.add(new ViewInfo(parser.getAttributePrefix(i), parser.getAttributeName(i), parser.getAttributeValue(i)));
+        }
+    }
+
+    public List<ViewInfo> getInfoList() {
+        return infoList;
+    }
+
+    public View getView() {
+        return view;
     }
 
     public int getImgId() {
@@ -172,4 +190,39 @@ public class ViewBean implements LayoutItemType {
         return arrowId;
     }
 
+    public static class ViewInfo {
+        private String prefix;
+        private String attributeName;
+        private String attributeValue;
+
+        public ViewInfo(String prefix, String attributeName, String attributeValue) {
+            this.prefix = prefix;
+            this.attributeName = attributeName;
+            this.attributeValue = attributeValue;
+        }
+
+        public String getPrefix() {
+            return prefix;
+        }
+
+        public void setPrefix(String prefix) {
+            this.prefix = prefix;
+        }
+
+        public String getAttributeName() {
+            return attributeName;
+        }
+
+        public void setAttributeName(String attributeName) {
+            this.attributeName = attributeName;
+        }
+
+        public String getAttributeValue() {
+            return attributeValue;
+        }
+
+        public void setAttributeValue(String attributeValue) {
+            this.attributeValue = attributeValue;
+        }
+    }
 }

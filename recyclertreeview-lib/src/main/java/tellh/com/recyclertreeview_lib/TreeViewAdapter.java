@@ -91,6 +91,18 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         } else {
             holder.itemView.setPadding(displayNodes.get(position).getHeight() * padding, 3, 3, 3);
         }
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                TreeNode selectedNode = displayNodes.get(holder.getLayoutPosition());
+                if (onTreeNodeListener != null) {
+                    return onTreeNodeListener.onLongClick(selectedNode, holder);
+
+                }
+                return false;
+            }
+        });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,6 +132,7 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             }
         });
+
         for (TreeViewBinder viewBinder : viewBinders) {
             if (viewBinder.getLayoutId() == displayNodes.get(position).getContent().getLayoutId())
                 viewBinder.bindView(holder, position, displayNodes.get(position));
@@ -310,6 +323,7 @@ public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public interface OnTreeNodeListener {
+        boolean onLongClick(TreeNode node, RecyclerView.ViewHolder holder);
         /**
          * called when TreeNodes were clicked.
          *

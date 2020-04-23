@@ -25,7 +25,9 @@ public class OutlineView extends LinearLayout {
     private Paint paint;
     private boolean interceptTouchEvent = true;
     private int displayType = DISPLAY_DESIGN;
-    private OnOutlineClickListener listener;
+
+    private OnOutlineClickListener outlineClickListener;
+    // private OnOutlineLongClickListener outlineLongClickListener;
     //排序后作为标记 防止多余的排序
     private boolean isSorted;
     private boolean isSelect;
@@ -55,13 +57,14 @@ public class OutlineView extends LinearLayout {
             case MotionEvent.ACTION_DOWN:
                 //允许传递点击事件时不触发选中事件
                 if (!interceptTouchEvent) return super.onTouchEvent(event);
-
                 if (!isSorted) sort(pairArrayList);
                 for (Pair<View, Rect> pair : pairArrayList) {
                     if (isInRect(pair.second, event.getRawX(), event.getRawY())) {
                         selectedRect = pair.second;
                         isSelect = true;
                         selectView = pair.first;
+                        if (outlineClickListener != null)
+                            outlineClickListener.onDown(selectView, displayType);
                         invalidate();
                         return true;
                     }
@@ -70,21 +73,29 @@ public class OutlineView extends LinearLayout {
                 break;
             case MotionEvent.ACTION_CANCEL:
                 if (isSelect) {
+                    if (outlineClickListener != null)
+                        outlineClickListener.onCancel(selectView, displayType);
                     if (!isHoldOutline) {
                         removeSelect();
                     }
+
                 }
                 break;
             case MotionEvent.ACTION_UP:
                 //在松手时触发
                 //必须是在rect内
                 if (isSelect) {
-                    if (isInRect(selectedRect, event.getRawX(), event.getRawY()) && listener != null) {
-                        listener.onClick(selectView, displayType);
+                    if (isInRect(selectedRect, event.getRawX(), event.getRawY()) && outlineClickListener != null) {
+                        outlineClickListener.onClick(selectView, displayType);
+                    } else {
+                        if (outlineClickListener != null)
+                            outlineClickListener.onCancel(selectView, displayType);
                     }
-                    if (!isHoldOutline) {
-                        removeSelect();
-                    }
+
+
+                }
+                if (!isHoldOutline) {
+                    removeSelect();
                 }
                 break;
         }
@@ -102,6 +113,7 @@ public class OutlineView extends LinearLayout {
 
         return x > rect.left && x < rect.right && y > rect.top && y < rect.bottom;
     }
+
 
     //按面积排序，小的在前
     private void sort(List<Pair<View, Rect>> pairArrayList) {
@@ -335,17 +347,32 @@ public class OutlineView extends LinearLayout {
         paint.setColor(0xFF1886f7);
     }
 
-    public OnOutlineClickListener getListener() {
-        return listener;
+    public OnOutlineClickListener getOutlineClickListener() {
+        return outlineClickListener;
     }
 
-    public void setListener(OnOutlineClickListener listener) {
-        this.listener = listener;
+    public void setOutlineClickListener(OnOutlineClickListener outlineClickListener) {
+        this.outlineClickListener = outlineClickListener;
     }
 
     public interface OnOutlineClickListener {
+        void onDown(View v, int displayType);
+
+        void onCancel(View v, int displayType);
         void onClick(View v, int displayType);
     }
 
+
+   /* public OnOutlineLongClickListener getOutlineLongClickListener() {
+        return outlineLongClickListener;
+    }
+
+    public void setOutlineLongClickListener(OnOutlineLongClickListener outlineLongClickListener) {
+        this.outlineLongClickListener = outlineLongClickListener;
+    }
+
+    public interface OnOutlineLongClickListener {
+        boolean onLongClick(View v, int displayType);
+    }*/
 
 }

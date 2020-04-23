@@ -4,9 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/material_button"
         android:layout_width="wrap_content"
+        android:background="#D22FB54E"
         android:layout_height="wrap_content"
         android:text="666" />
 

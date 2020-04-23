@@ -6,6 +6,8 @@
     android:layout_height="match_parent">
 
     <coyamo.visualxml.lib.ui.OutlineView
+        android:layout_margin="20dp"
+        android:padding="10dp"
         android:id="@+id/outline_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

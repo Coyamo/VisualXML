@@ -1,11 +1,15 @@
 package coyamo.visualxml.lib.proxy;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -19,8 +23,6 @@ import java.util.Map;
 import coyamo.visualxml.lib.parser.AndroidXmlParser;
 import coyamo.visualxml.lib.utils.MessageArray;
 import coyamo.visualxml.lib.utils.Utils;
-
-
 public class ProxyAttributeSet {
     //attr中的枚举值与实际需要的参数的映射
     private static Map<String, Map<String, String>> enumMap = new HashMap<>();
@@ -33,19 +35,30 @@ public class ProxyAttributeSet {
         orientationMap.put("vertical", "1");
         orientationMap.put("horizontal", "0");
 
+
         Map<String, String> layoutMap = new HashMap<>();
         enumMap.put("layout_width", layoutMap);
         enumMap.put("layout_height", layoutMap);
-        layoutMap.put("fill_parent", "-1");
-        layoutMap.put("match_parent", "-1");
-        layoutMap.put("wrap_content", "-2");
+        layoutMap.put("fill_parent", String.valueOf(ViewGroup.LayoutParams.MATCH_PARENT));
+        layoutMap.put("match_parent", String.valueOf(ViewGroup.LayoutParams.MATCH_PARENT));
+        layoutMap.put("wrap_content", String.valueOf(ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        Map<String, String> importantForAccessibilityMap = new HashMap<>();
+        enumMap.put("importantForAccessibility", importantForAccessibilityMap);
+        importantForAccessibilityMap.put("auto", String.valueOf(View.IMPORTANT_FOR_ACCESSIBILITY_AUTO));
+        importantForAccessibilityMap.put("yes", String.valueOf(View.IMPORTANT_FOR_ACCESSIBILITY_YES));
+        importantForAccessibilityMap.put("no", String.valueOf(View.IMPORTANT_FOR_ACCESSIBILITY_NO));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            importantForAccessibilityMap.put("noHideDescendants", String.valueOf(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS));
+        }
 
 
-        Map<String, String> visibilityMap = new HashMap<>();
-        enumMap.put("visibility", visibilityMap);
-        visibilityMap.put("visible", "0");
-        visibilityMap.put("invisible", "4");
-        visibilityMap.put("gone", "8");
+        Map<String, String> verticalScrollbarPositionMap = new HashMap<>();
+        enumMap.put("verticalScrollbarPosition", verticalScrollbarPositionMap);
+        verticalScrollbarPositionMap.put("defaultPosition", String.valueOf(View.SCROLLBAR_POSITION_DEFAULT));
+        verticalScrollbarPositionMap.put("left", String.valueOf(View.SCROLLBAR_POSITION_LEFT));
+        verticalScrollbarPositionMap.put("right", String.valueOf(View.SCROLLBAR_POSITION_RIGHT));
+
 
         Map<String, String> typefaceMap = new HashMap<>();
         enumMap.put("typeface", typefaceMap);
@@ -62,15 +75,19 @@ public class ProxyAttributeSet {
         ellipsizeMap.put("end", "END");
         ellipsizeMap.put("marquee", "MARQUEE");
 
-        Map<String, String> textAlignmentMap = new HashMap<>();
-        enumMap.put("textAlignment", textAlignmentMap);
-        textAlignmentMap.put("inherit", "0");
-        textAlignmentMap.put("gravity", "1");
-        textAlignmentMap.put("textStart", "2");
-        textAlignmentMap.put("textEnd", "3");
-        textAlignmentMap.put("center", "4");
-        textAlignmentMap.put("viewStart", "5");
-        textAlignmentMap.put("viewEnd", "6");
+        Map<String, String> textDirectionMap = new HashMap<>();
+        enumMap.put("textDirection", textDirectionMap);
+        textDirectionMap.put("inherit", String.valueOf(View.TEXT_DIRECTION_INHERIT));
+        textDirectionMap.put("firstStrong", String.valueOf(View.TEXT_DIRECTION_FIRST_STRONG));
+        textDirectionMap.put("anyRtl", String.valueOf(View.TEXT_DIRECTION_ANY_RTL));
+        textDirectionMap.put("ltr", String.valueOf(View.TEXT_DIRECTION_LTR));
+        textDirectionMap.put("rtl", String.valueOf(View.TEXT_DIRECTION_RTL));
+        textDirectionMap.put("locale", String.valueOf(View.TEXT_DIRECTION_LOCALE));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            textDirectionMap.put("firstStrongLtr", String.valueOf(View.TEXT_DIRECTION_FIRST_STRONG_LTR));
+            textDirectionMap.put("firstStrongRtl", String.valueOf(View.TEXT_DIRECTION_FIRST_STRONG_RTL));
+
+        }
 
 
         Map<String, String> alignmentModeMap = new HashMap<>();
@@ -90,6 +107,44 @@ public class ProxyAttributeSet {
         scaleTypeMap.put("centerCrop", "CENTER_CROP");
         scaleTypeMap.put("centerInside", "CENTER_INSIDE");
 
+        Map<String, String> scrollbarStyleMap = new HashMap<>();
+        enumMap.put("scrollbarStyle", scrollbarStyleMap);
+        scrollbarStyleMap.put("insideOverlay", String.valueOf(View.SCROLLBARS_INSIDE_OVERLAY));
+        scrollbarStyleMap.put("insideInset", String.valueOf(View.SCROLLBARS_INSIDE_INSET));
+        scrollbarStyleMap.put("outsideOverlay", String.valueOf(View.SCROLLBARS_OUTSIDE_OVERLAY));
+        scrollbarStyleMap.put("outsideInset", String.valueOf(View.SCROLLBARS_OUTSIDE_INSET));
+
+        Map<String, String> overScrollModeMap = new HashMap<>();
+        enumMap.put("overScrollMode", overScrollModeMap);
+        overScrollModeMap.put("always", String.valueOf(View.OVER_SCROLL_ALWAYS));
+        overScrollModeMap.put("ifContentScrolls", String.valueOf(View.OVER_SCROLL_IF_CONTENT_SCROLLS));
+        overScrollModeMap.put("never", String.valueOf(View.OVER_SCROLL_NEVER));
+
+        Map<String, String> layoutDirectionMap = new HashMap<>();
+        enumMap.put("layoutDirection", layoutDirectionMap);
+        layoutDirectionMap.put("ltr", String.valueOf(View.LAYOUT_DIRECTION_LTR));
+        layoutDirectionMap.put("rtl", String.valueOf(View.LAYOUT_DIRECTION_RTL));
+        layoutDirectionMap.put("inherit", String.valueOf(View.LAYOUT_DIRECTION_INHERIT));
+        layoutDirectionMap.put("locale", String.valueOf(View.LAYOUT_DIRECTION_LOCALE));
+
+        Map<String, String> layerTypeMap = new HashMap<>();
+        enumMap.put("layerType", layerTypeMap);
+        layerTypeMap.put("none", String.valueOf(View.LAYER_TYPE_NONE));
+        layerTypeMap.put("software", String.valueOf(View.LAYER_TYPE_SOFTWARE));
+        layerTypeMap.put("hardware", String.valueOf(View.LAYER_TYPE_HARDWARE));
+
+
+        Map<String, String> drawingCacheQualityMap = new HashMap<>();
+        enumMap.put("drawingCacheQuality", drawingCacheQualityMap);
+        drawingCacheQualityMap.put("auto", String.valueOf(View.DRAWING_CACHE_QUALITY_AUTO));
+        drawingCacheQualityMap.put("low", String.valueOf(View.DRAWING_CACHE_QUALITY_LOW));
+        drawingCacheQualityMap.put("high", String.valueOf(View.DRAWING_CACHE_QUALITY_HIGH));
+
+        Map<String, String> visibilityMap = new HashMap<>();
+        enumMap.put("visibility", visibilityMap);
+        visibilityMap.put("visible", String.valueOf(View.VISIBLE));
+        visibilityMap.put("invisible", String.valueOf(View.INVISIBLE));
+        visibilityMap.put("gone", String.valueOf(View.GONE));
 
     }
 
@@ -104,28 +159,6 @@ public class ProxyAttributeSet {
         textStyleMap.put("normal", 0);
         textStyleMap.put("bold", 1);
         textStyleMap.put("italic", 2);
-
-
-        Map<String, Integer> gravityMap = new HashMap<>();
-        flagMap.put("gravity", gravityMap);
-        flagMap.put("layout_gravity", gravityMap);
-        flagMap.put("foregroundGravity", gravityMap);
-        gravityMap.put("top", 0x30);
-        gravityMap.put("bottom", 0x50);
-        gravityMap.put("left", 0x03);
-        gravityMap.put("right", 0x05);
-        gravityMap.put("center_vertical", 0x10);
-        gravityMap.put("fill_vertical", 0x70);
-        gravityMap.put("center_horizontal", 0x01);
-        gravityMap.put("fill_horizontal", 0x07);
-        gravityMap.put("center", 0x11);
-        gravityMap.put("fill", 0x77);
-        gravityMap.put("clip_vertical", 0x80);
-        gravityMap.put("clip_horizontal", 0x08);
-        gravityMap.put("start", 0x00800003);
-        gravityMap.put("end", 0x00800005);
-
-
         Map<String, Integer> inputTypeMap = new HashMap<>();
         flagMap.put("inputType", inputTypeMap);
         inputTypeMap.put("none", 0x00000000);
@@ -160,6 +193,38 @@ public class ProxyAttributeSet {
         inputTypeMap.put("datetime", 0x00000004);
         inputTypeMap.put("date", 0x00000014);
         inputTypeMap.put("time", 0x00000024);
+
+        Map<String, Integer> scrollbarsMap = new HashMap<>();
+        flagMap.put("scrollbars", scrollbarsMap);
+        scrollbarsMap.put("none", 0x00000000);
+        scrollbarsMap.put("horizontal", 0x00001000);
+        scrollbarsMap.put("vertical", 0x00002000);
+
+        Map<String, Integer> fadingEdgeMap = new HashMap<>();
+        flagMap.put("fadingEdge", fadingEdgeMap);
+        flagMap.put("requiresFadingEdge", fadingEdgeMap);
+        fadingEdgeMap.put("none", 0x00000000);
+        fadingEdgeMap.put("horizontal", 0x00001000);
+        fadingEdgeMap.put("vertical", 0x00002000);
+
+        Map<String, Integer> gravityMap = new HashMap<>();
+        //flagMap.put("gravity", gravityMap);
+        flagMap.put("layout_gravity", gravityMap);
+        flagMap.put("foregroundGravity", gravityMap);
+        gravityMap.put("top", Gravity.TOP);
+        gravityMap.put("bottom", Gravity.BOTTOM);
+        gravityMap.put("left", Gravity.LEFT);
+        gravityMap.put("right", Gravity.RIGHT);
+        gravityMap.put("center_vertical", Gravity.CENTER_VERTICAL);
+        gravityMap.put("fill_vertical", Gravity.FILL_VERTICAL);
+        gravityMap.put("center_horizontal", Gravity.CENTER_HORIZONTAL);
+        gravityMap.put("fill_horizontal", Gravity.FILL_HORIZONTAL);
+        gravityMap.put("center", Gravity.CENTER);
+        gravityMap.put("fill", Gravity.FILL);
+        gravityMap.put("clip_vertical", Gravity.CLIP_VERTICAL);
+        gravityMap.put("clip_horizontal", Gravity.CLIP_HORIZONTAL);
+        gravityMap.put("start", Gravity.START);
+        gravityMap.put("end", Gravity.END);
     }
 
     private MessageArray debug = MessageArray.getInstanse();
@@ -311,16 +376,10 @@ public class ProxyAttributeSet {
                     case "layout_height":
                         Utils.setField(v.getLayoutParams(), "height", (int) Float.parseFloat(value));
                         continue;
-                    case "layout_gravity":
-                        Utils.setField(v.getLayoutParams(), "gravity", parseFlag(name, value));
-                        continue;
                     case "layout_weight":
                         Utils.setField(v.getLayoutParams(), "weight", Float.parseFloat(value));
                         continue;
                     case "id"://do first
-                        continue;
-                    case "background":
-                        Utils.invoke(v, "setBackgroundDrawable", new Class[]{Drawable.class}, resource.getDrawable(value));
                         continue;
                     case "src":
                         Utils.invoke(v, "setImageDrawable", new Class[]{Drawable.class}, resource.getDrawable(value));
@@ -330,10 +389,6 @@ public class ProxyAttributeSet {
                         continue;
                     case "text":
                         Utils.invoke(v, "setText", new Class[]{CharSequence.class}, resource.getString(value));
-                        continue;
-                    case "alpha":
-                        if (getAttributeValue(AndroidXmlParser.ANDROID_NS, "enabled") == null || getAttributeValue(AndroidXmlParser.ANDROID_NS, "enabled").equals(true))
-                            Utils.invoke(v, "setAlpha", new Class[]{float.class}, Float.parseFloat(value));
                         continue;
                     case "elevation":
                         Utils.invoke(v, "setElevation", new Class[]{float.class}, Float.parseFloat(value));
@@ -559,7 +614,7 @@ public class ProxyAttributeSet {
                     }
                     case "enabled":
                         if (!Boolean.parseBoolean(value))
-                            Utils.invoke(v, "setAlpha", new Class[]{float.class}, 0.3f);
+                            Utils.invoke(v, "setEnabled", new Class[]{boolean.class}, Boolean.parseBoolean(value));
                         continue;
                     case "switchMinWidth":
                         Utils.invoke(v, "setSwitchMinWidth", new Class[]{int.class}, (int) Float.parseFloat(value));
@@ -569,9 +624,6 @@ public class ProxyAttributeSet {
                         continue;
                     case "thumbTextPadding":
                         Utils.invoke(v, "setThumbTextPadding", new Class[]{int.class}, (int) Float.parseFloat(value));
-                        continue;
-                    case "foregroundGravity":
-                        Utils.invoke(v, "setForegroundGravity", new Class[]{int.class}, parseFlag(name, value));
                         continue;
                     case "clipChildren":
                         Utils.invoke(v, "setClipChildren", new Class[]{boolean.class}, Boolean.parseBoolean(value));
@@ -665,7 +717,7 @@ public class ProxyAttributeSet {
                         Utils.invoke(v, "setMeasureWithLargestChildEnabled", new Class[]{boolean.class}, Boolean.parseBoolean(value));
                         continue;
                     case "textStyle": {
-                        int style = parseFlag(name, value);
+                        int style = Integer.parseInt(parseFlag(name, value));
                         Typeface tf = (Typeface) Utils.invoke(v, "getTypeface", null);
                         Utils.invoke(v, "setTypeface", new Class[]{Typeface.class, int.class}, tf, style);
                         continue;
@@ -676,6 +728,200 @@ public class ProxyAttributeSet {
                         continue;
                     }
 
+                    //////////////////////////////////
+                    case "alpha":
+                        Utils.invoke(v, "setAlpha", new Class[]{float.class}, Float.parseFloat(value));
+                        continue;
+                    case "background":
+                        Utils.invoke(v, "setBackgroundDrawable", new Class[]{Drawable.class}, resource.getDrawable(value));
+                        continue;
+                    case "clickable":
+                        Utils.invoke(v, "setClickable", new Class[]{boolean.class}, Boolean.parseBoolean(value));
+                        continue;
+                    case "contentDescription":
+                        Utils.invoke(v, "setContentDescription", new Class[]{CharSequence.class}, value);
+                        continue;
+                    case "drawingCacheQuality":
+                        Utils.invoke(v, "setDrawingCacheQuality", new Class[]{int.class}, Integer.parseInt(value));
+                        continue;
+                    case "duplicateParentState":
+                        Utils.invoke(v, "setDuplicateParentStateEnabled", new Class[]{boolean.class}, Boolean.parseBoolean(value));
+                        continue;
+                    case "fadeScrollbars":
+                        Utils.invoke(v, "setScrollbarFadingEnabled", new Class[]{boolean.class}, Boolean.parseBoolean(value));
+                        continue;
+                    case "fadingEdge":
+                    case "requiresFadingEdge": {
+                        //特殊 xml中为flag
+                        //clear default
+                        Utils.invoke(v, "setHorizontalFadingEdgeEnabled", new Class[]{boolean.class}, false);
+                        Utils.invoke(v, "setVerticalFadingEdgeEnabled", new Class[]{boolean.class}, false);
+                        switch (Integer.parseInt(value)) {
+                            case 0x00000000://none
+                                continue;
+                            case 0x00001000://h
+                                Utils.invoke(v, "setHorizontalFadingEdgeEnabled", new Class[]{boolean.class}, true);
+                                continue;
+                            case 0x00002000://v
+                                Utils.invoke(v, "setVerticalFadingEdgeEnabled", new Class[]{boolean.class}, true);
+                                continue;
+                            case 0x00003000://hv
+                                Utils.invoke(v, "setHorizontalFadingEdgeEnabled", new Class[]{boolean.class}, true);
+                                Utils.invoke(v, "setVerticalFadingEdgeEnabled", new Class[]{boolean.class}, true);
+                                continue;
+                        }
+                        continue;
+                    }
+
+                    case "fadingEdgeLength":
+                        Utils.invoke(v, "setFadingEdgeLength", new Class[]{int.class}, Integer.parseInt(value));
+                        continue;
+                    case "filterTouchesWhenObscured":
+                        Utils.invoke(v, "setFilterTouchesWhenObscured", new Class[]{boolean.class}, Boolean.parseBoolean(value));
+                        continue;
+                    case "fitsSystemWindows":
+                        Utils.invoke(v, "setFitsSystemWindows", new Class[]{boolean.class}, Boolean.parseBoolean(value));
+                        continue;
+                    case "focusable":
+                        Utils.invoke(v, "setFocusable", new Class[]{boolean.class}, Boolean.parseBoolean(value));
+                        continue;
+                    case "focusableInTouchMode":
+                        Utils.invoke(v, "setFocusableInTouchMode", new Class[]{boolean.class}, Boolean.parseBoolean(value));
+                        continue;
+                    case "foreground":
+                        Utils.invoke(v, "setForeground", new Class[]{Drawable.class}, resource.getDrawable(value));
+                        continue;
+                    case "foregroundGravity":
+                        Utils.invoke(v, "setForegroundGravity", new Class[]{int.class}, Integer.parseInt(value));
+                        continue;
+                    case "hapticFeedbackEnabled":
+                        Utils.invoke(v, "setHapticFeedbackEnabled", new Class[]{boolean.class}, Boolean.parseBoolean(value));
+                        continue;
+                    case "importantForAccessibility":
+                        Utils.invoke(v, "setImportantForAccessibility", new Class[]{int.class}, Integer.parseInt(value));
+                        continue;
+                    case "isScrollContainer":
+                        Utils.invoke(v, "setScrollContainer", new Class[]{boolean.class}, Boolean.parseBoolean(value));
+                        continue;
+                    case "keepScreenOn":
+                        Utils.invoke(v, "setKeepScreenOn", new Class[]{boolean.class}, Boolean.parseBoolean(value));
+                        continue;
+                    case "labelFor":
+                        Utils.invoke(v, "setLabelFor", new Class[]{int.class}, resource.getId(value));
+                        continue;
+                    case "layerType":
+                        Utils.invoke(v, "setLayerType", new Class[]{int.class, Paint.class}, resource.getId(value), null);
+                        continue;
+                    case "layoutDirection":
+                        Utils.invoke(v, "setLayoutDirection", new Class[]{int.class}, Integer.parseInt(value));
+                        continue;
+                    case "layout_gravity":
+                        Utils.setField(v.getLayoutParams(), "gravity", Integer.parseInt(value));
+                        continue;
+
+                    case "longClickable":
+                        Utils.invoke(v, "setLongClickable", new Class[]{boolean.class}, Boolean.parseBoolean(value));
+                        continue;
+                    case "nextFocusDown":
+                        Utils.invoke(v, "setNextFocusDownId", new Class[]{int.class}, resource.getId(value));
+                        continue;
+                    case "nextFocusForward":
+                        Utils.invoke(v, "setNextFocusForwardId", new Class[]{int.class}, resource.getId(value));
+                        continue;
+                    case "nextFocusLeft":
+                        Utils.invoke(v, "setNextFocusLeftId", new Class[]{int.class}, resource.getId(value));
+                        continue;
+                    case "nextFocusRight":
+                        Utils.invoke(v, "setNextFocusRightId", new Class[]{int.class}, resource.getId(value));
+                        continue;
+                    case "nextFocusUp":
+                        Utils.invoke(v, "setNextFocusUpId", new Class[]{int.class}, resource.getId(value));
+                        continue;
+                    case "onClick":
+                        //do nothing
+                        return;
+                    case "overScrollMode":
+                        Utils.invoke(v, "setOverScrollMode", new Class[]{int.class}, Integer.parseInt(value));
+                        continue;
+                    case "saveEnabled":
+                        Utils.invoke(v, "setSaveEnabled", new Class[]{boolean.class}, Boolean.parseBoolean(value));
+                        continue;
+                    case "scrollX":
+                        Utils.invoke(v, "setScrollX", new Class[]{int.class}, Integer.parseInt(value));
+                        continue;
+                    case "scrollY":
+                        Utils.invoke(v, "setScrollY", new Class[]{int.class}, Integer.parseInt(value));
+                        continue;
+                    case "scrollbarAlwaysDrawHorizontalTrack":
+                        //Utils.invoke(v, "setHorizontalScrollBarEnabled", new Class[]{boolean.class}, Boolean.parseBoolean(value));
+                        continue;
+                    case "scrollbarAlwaysDrawVerticalTrack":
+                        //Utils.invoke(v, "setVerticalScrollBarEnabled", new Class[]{boolean.class}, Boolean.parseBoolean(value));
+                        continue;
+                    case "scrollbarDefaultDelayBeforeFade":
+                        Utils.invoke(v, "setScrollBarDefaultDelayBeforeFade", new Class[]{int.class}, Integer.parseInt(value));
+                        continue;
+                    case "scrollbarFadeDuration":
+                        Utils.invoke(v, "setScrollBarFadeDuration", new Class[]{int.class}, Integer.parseInt(value));
+                        continue;
+                    case "scrollbarSize":
+                        Utils.invoke(v, "setScrollBarSize", new Class[]{int.class}, Integer.parseInt(value));
+                        continue;
+                    case "scrollbarStyle":
+                        Utils.invoke(v, "setScrollBarStyle", new Class[]{int.class}, Integer.parseInt(value));
+                        continue;
+                    case "scrollbarThumbHorizontal":
+                        Utils.invoke(v, "setHorizontalScrollbarThumbDrawable", new Class[]{Drawable.class}, resource.getDrawable(value));
+                        continue;
+                    case "scrollbarThumbVertical":
+                        Utils.invoke(v, "setVerticalScrollbarThumbDrawable", new Class[]{Drawable.class}, resource.getDrawable(value));
+                        continue;
+                    case "scrollbarTrackHorizontal":
+                        Utils.invoke(v, "setHorizontalScrollbarTrackDrawable", new Class[]{Drawable.class}, resource.getDrawable(value));
+                        continue;
+                    case "scrollbarTrackVertical":
+                        Utils.invoke(v, "setVerticalScrollbarTrackDrawable", new Class[]{Drawable.class}, resource.getDrawable(value));
+                        continue;
+                    case "scrollbars":
+                        Utils.invoke(v, "setHorizontalScrollBarEnabled", new Class[]{boolean.class}, false);
+                        Utils.invoke(v, "setVerticalScrollBarEnabled", new Class[]{boolean.class}, false);
+                        switch (Integer.parseInt(value)) {
+                            case 0x00000000://none
+                                continue;
+                            case 0x00001000://h
+                                Utils.invoke(v, "setHorizontalScrollBarEnabled", new Class[]{boolean.class}, true);
+                                continue;
+                            case 0x00002000://v
+                                Utils.invoke(v, "setVerticalScrollBarEnabled", new Class[]{boolean.class}, true);
+                                continue;
+                            case 0x00003000://hv
+                                Utils.invoke(v, "setHorizontalScrollBarEnabled", new Class[]{boolean.class}, true);
+                                Utils.invoke(v, "setVerticalScrollBarEnabled", new Class[]{boolean.class}, true);
+                                continue;
+                        }
+                        continue;
+                    case "soundEffectsEnabled":
+                        Utils.invoke(v, "setSoundEffectsEnabled", new Class[]{boolean.class}, Boolean.parseBoolean(value));
+                        continue;
+                    case "style":
+                        //在创建时处理
+                        continue;
+                    case "tag":
+                        //无关ui不管他
+                        continue;
+                    case "textDirection":
+                        Utils.invoke(v, "setTextDirection", new Class[]{int.class}, Integer.parseInt(value));
+                        continue;
+                        //case "theme":
+                    case "transformPivotX":
+                        Utils.invoke(v, "setPivotX", new Class[]{float.class}, Float.parseFloat(value));
+                        continue;
+                    case "transformPivotY":
+                        Utils.invoke(v, "setPivotY", new Class[]{float.class}, Float.parseFloat(value));
+                        continue;
+                    case "verticalScrollbarPosition":
+                        Utils.invoke(v, "setVerticalScrollbarPosition", new Class[]{int.class}, Integer.parseInt(value));
+                        continue;
 
                 }
         }
@@ -686,42 +932,10 @@ public class ProxyAttributeSet {
         //解析Android默认命名空间内元素
         //暂时不考虑引用资源的情况
         switch (name) {
-            //处理单位数字
-            case "switchMinWidth":
-            case "switchPadding":
-            case "thumbTextPadding":
-            case "baseLine":
-            case "translationX":
-            case "translationY":
-            case "translationZ":
-            case "padding":
-            case "paddingLeft":
-            case "paddingStart":
-            case "paddingRight":
-            case "paddingEnd":
-            case "paddingTop":
-            case "paddingBottom":
-            case "layout_marginBottom":
-            case "layout_marginLeft":
-            case "layout_marginStart":
-            case "layout_marginEnd":
-            case "layout_marginTop":
-            case "layout_marginRight":
-            case "layout_margin":
-            case "elevation":
-            case "width":
-            case "height":
-            case "minWidth":
-            case "maxWidth":
-            case "minHeight":
-            case "maxHeight":
-            case "textSize":
-                return parseUnitString2Px(value) + "";
             //返回原来的值
             case "gravity":
             case "layout":
             case "src":
-            case "style":
             case "textAppearance":
             case "measureWithLargestChild":
             case "columnCount":
@@ -761,21 +975,13 @@ public class ProxyAttributeSet {
             case "shadowDx":
             case "shadowDy":
             case "shadowRadius":
-            case "rotation":
-            case "rotationX":
-            case "rotationY":
             case "singleLine":
             case "textColor":
             case "textColorHighlight":
             case "textColorHint":
             case "textColorLink":
             case "textScaleX":
-            case "scaleX":
-            case "scaleY":
             case "textIsSelectable":
-
-                //case "textScaleY":
-
             case "checked":
             case "maxEms":
             case "ems":
@@ -784,7 +990,6 @@ public class ProxyAttributeSet {
             case "maxLines":
             case "minEms":
             case "minLines":
-            case "onClick":
             case "layout_centerInParent":
             case "layout_centerVertical":
             case "layout_centerHorizontal":
@@ -807,28 +1012,120 @@ public class ProxyAttributeSet {
             case "layout_alignParentLeft":
             case "layout_alignParentStart":
             case "layout_alignParentTop":
-            case "id":
-            case "layout_weight":
             case "text":
+            case "textStyle":
             case "alpha":
             case "background":
-            case "textStyle":
+            case "clickable":
+            case "contentDescription":
+            case "duplicateParentState":
+            case "fadeScrollbars":
+            case "filterTouchesWhenObscured":
+            case "fitsSystemWindows":
+            case "focusable":
+            case "focusableInTouchMode":
+            case "foreground":
+            case "hapticFeedbackEnabled":
+            case "id":
+            case "isScrollContainer":
+            case "keepScreenOn":
+            case "longClickable":
+            case "layout_weight":
+            case "nextFocusDown":
+            case "nextFocusForward":
+            case "nextFocusLeft":
+            case "nextFocusRight":
+            case "nextFocusUp":
+            case "onClick":
+            case "rotation":
+            case "rotationX":
+            case "rotationY":
+            case "saveEnabled":
+            case "scaleX":
+            case "scaleY":
+            case "scrollX":
+            case "scrollY":
+            case "scrollbarAlwaysDrawHorizontalTrack":
+            case "scrollbarAlwaysDrawVerticalTrack":
+            case "scrollbarDefaultDelayBeforeFade":
+            case "scrollbarFadeDuration":
+            case "labelFor":
+            case "scrollbarThumbHorizontal":
+            case "scrollbarThumbVertical":
+            case "scrollbarTrackHorizontal":
+            case "scrollbarTrackVertical":
+            case "soundEffectsEnabled":
+            case "style":
+            case "tag":
+            case "targetApi":
+            case "theme":
                 return value;
+
             //处理枚举值
             case "alignmentMode":
             case "scaleType":
-            case "textAlignment":
             case "ellipsize":
             case "typeface":
-            case "visibility":
             case "orientation":
-
+            case "drawingCacheQuality":
+            case "layerType":
+            case "layoutDirection":
+            case "overScrollMode":
+            case "scrollbarStyle":
+            case "textAlignment":
+            case "textDirection":
+            case "verticalScrollbarPosition":
+            case "visibility":
+            case "importantForAccessibility":
                 return parseEnum(name, value);
-            case "layout_width":
-            case "layout_height": {
-                String va = parseEnum(name, value, "null");
-                if (va.equals("null")) {
-                    return (int) parseUnitString2Px(value) + "";
+            case "layout_gravity":
+            case "fadingEdge":
+            case "foregroundGravity":
+            case "requiresFadingEdge":
+            case "scrollbars":
+                return parseFlag(name, value);
+            case "fadingEdgeLength":
+            case "layout_margin":
+            case "minHeight":
+            case "minWidth":
+            case "padding":
+            case "scrollbarSize":
+                return toIntString(parseUnitString2Px(value));
+
+            //处理单位数字
+            case "transformPivotX":
+            case "transformPivotY":
+            case "translationX":
+            case "translationY":
+            case "switchMinWidth":
+            case "switchPadding":
+            case "thumbTextPadding":
+            case "baseLine":
+            case "translationZ":
+            case "paddingLeft":
+            case "paddingStart":
+            case "paddingRight":
+            case "paddingEnd":
+            case "paddingTop":
+            case "paddingBottom":
+            case "layout_marginBottom":
+            case "layout_marginLeft":
+            case "layout_marginStart":
+            case "layout_marginEnd":
+            case "layout_marginTop":
+            case "layout_marginRight":
+            case "elevation":
+            case "width":
+            case "height":
+            case "maxWidth":
+            case "maxHeight":
+            case "textSize":
+                return parseUnitString2Px(value);
+            case "layout_height":
+            case "layout_width": {
+                String va = parseEnum(name, value, null);
+                if (va == null) {
+                    return toIntString(parseUnitString2Px(value));
                 }
                 return va;
 
@@ -850,11 +1147,11 @@ public class ProxyAttributeSet {
         return def;
     }
 
-    private int parseFlag(String name, String value) {
+    private String parseFlag(String name, String value) {
         // xx或xx|xx...或xx|,不允许xx||
         Map<String, Integer> map = flagMap.get(name);
         if (!value.contains("|")) {
-            return map.get(value);
+            return String.valueOf(map.get(value));
         }
         //flag类型好像都是int
         int flag = -1;
@@ -872,10 +1169,10 @@ public class ProxyAttributeSet {
                 debug.logE(value + "格式错误");
             }
         }
-        return flag;
+        return String.valueOf(flag);
     }
 
-    private float parseUnitString2Px(String unitString) {
+    public String parseUnitString2Px(String unitString) {
         //xml支持的单位
         String[] suffixs = {"sp", "dp", "dip", "pt", "px", "mm", "in"};
         unitString = unitString.trim();
@@ -887,19 +1184,18 @@ public class ProxyAttributeSet {
                     float v = Float.parseFloat(unitString.substring(0, lastIndex));
                     switch (suffix) {
                         case "sp":
-                            return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, v, ctx.getResources().getDisplayMetrics());
+                            return String.valueOf(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, v, ctx.getResources().getDisplayMetrics()));
                         case "dp":
-                            return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v, ctx.getResources().getDisplayMetrics());
                         case "dip":
-                            return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v, ctx.getResources().getDisplayMetrics());
+                            return String.valueOf(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v, ctx.getResources().getDisplayMetrics()));
                         case "pt":
-                            return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PT, v, ctx.getResources().getDisplayMetrics());
+                            return String.valueOf(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PT, v, ctx.getResources().getDisplayMetrics()));
                         case "px":
-                            return v;
+                            return String.valueOf(v);
                         case "mm":
-                            return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, v, ctx.getResources().getDisplayMetrics());
+                            return String.valueOf(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, v, ctx.getResources().getDisplayMetrics()));
                         case "in":
-                            return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_IN, v, ctx.getResources().getDisplayMetrics());
+                            return String.valueOf(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_IN, v, ctx.getResources().getDisplayMetrics()));
                     }
 
                 } catch (Exception e) {
@@ -909,7 +1205,8 @@ public class ProxyAttributeSet {
             }
         }
         debug.logE(mParser.getLineNumber() + "行 " + mParser.getColumnNumber() + "列：" + unitString + " 不是单位数字！");
-        return -1;
+
+        return null;
     }
 
     public int getAttributeCount() {
@@ -940,6 +1237,11 @@ public class ProxyAttributeSet {
 
     public boolean hasAttribute(String name) {
         return mParser.getAttributeValue(AndroidXmlParser.ANDROID_NS, name) != null;
+    }
+
+    public String toIntString(String str) {
+        if (str.contains(".")) return str.substring(0, str.lastIndexOf("."));
+        return str;
     }
 }
 
