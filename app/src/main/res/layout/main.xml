@@ -51,7 +51,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 app:srcCompat="@drawable/ic_visual_assets"
                 android:padding="5dp" />
 
@@ -61,7 +61,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/title_icon"
                 android:padding="5dp"
-                android:text="Resource Manager"
+                android:text="@string/resource_manager"
                 android:textColor="@color/textColorPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -99,7 +99,7 @@
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></androidx.viewpager.widget.ViewPager>
+            android:layout_height="match_parent" />
     </LinearLayout>
 
 

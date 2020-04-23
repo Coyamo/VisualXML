@@ -277,6 +277,9 @@ public class ViewActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(View buttonView, boolean isChecked) {
                 isEditMode = !isChecked;
+                if (isEditMode) {
+                    outlineView.removeSelect();
+                }
                 outlineView.setHoldOutline(isChecked);
             }
         });

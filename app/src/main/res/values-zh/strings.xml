@@ -1,0 +1,17 @@
+<resources>
+    <string name="resource">资源</string>
+    <string name="resource_manager">资源管理器</string>
+    <string name="debug">调试输出</string>
+    <string name="component_tree">控件树</string>
+    <string name="raw_xml">源XML</string>
+    <string name="app_name">VisualXML</string>
+    <string name="about">关于</string>
+    <string name="ok">确定</string>
+    <string name="run">运行</string>
+    <string name="mode">模式</string>
+    <string name="design_surface">设计层</string>
+    <string name="view">视图</string>
+    <string name="design">设计</string>
+    <string name="blueprint">蓝图</string>
+
+</resources>

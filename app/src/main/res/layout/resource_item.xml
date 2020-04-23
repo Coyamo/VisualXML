@@ -9,7 +9,8 @@
         android:id="@+id/resource_item_icon"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/resource" />
 
     <LinearLayout
         android:id="@+id/resource_item_ll"

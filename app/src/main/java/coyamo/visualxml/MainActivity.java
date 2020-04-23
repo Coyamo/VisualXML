@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         //resources = ProxyResources.getInstance();
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Raw XML");
+        actionBar.setTitle(getString(R.string.raw_xml));
 
         signlist.setAdapter(new SignAdapter(editor));
         LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -130,9 +130,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.about:
                 new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("关于")
+                        .setTitle(R.string.about)
                         .setMessage("硬解Xml，可以解析大部分View和属性。可以调用大部分系统color、drawable、style、attr、string,代码有点辣眼睛 凑合着看\nರ_ರ ...")
-                        .setPositiveButton("确定", null)
+                        .setPositiveButton(R.string.ok, null)
                         .show();
                 break;
 

@@ -32,8 +32,7 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 app:srcCompat="@drawable/ic_debug"
                 android:padding="5dp" />
 
@@ -41,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="Debug"
+                android:text="@string/debug"
                 android:textColor="@color/textColorPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -76,8 +75,7 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 app:srcCompat="@drawable/ic_component_tree"
                 android:clickable="true"
                 android:focusable="true"
@@ -87,7 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="Component Tree"
+                android:text="@string/component_tree"
                 android:textColor="@color/textColorPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
