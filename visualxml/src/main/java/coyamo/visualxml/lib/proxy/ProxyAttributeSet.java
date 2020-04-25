@@ -412,7 +412,7 @@ public class ProxyAttributeSet {
                         Utils.invoke(v, "setElevation", new Class[]{float.class}, Float.parseFloat(value));
                         continue;
                     case "gravity":
-                        Utils.invoke(v, "setGravity", new Class[]{int.class}, parseFlag(name, value));
+                        Utils.invoke(v, "setGravity", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
                     case "orientation":
                         Utils.invoke(v, "setOrientation", new Class[]{int.class}, Integer.parseInt(value));
@@ -601,7 +601,7 @@ public class ProxyAttributeSet {
                         Utils.invoke(v, "setEllipsize", new Class[]{TextUtils.TruncateAt.class}, TextUtils.TruncateAt.valueOf(value));
                         continue;
                     case "inputType":
-                        Utils.invoke(v, "setInputType", new Class[]{int.class}, parseFlag(name, (value)));
+                        Utils.invoke(v, "setInputType", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
                     case "textAlignment":
                         Utils.invoke(v, "setTextAlignment", new Class[]{int.class}, Integer.valueOf(value));
@@ -735,7 +735,7 @@ public class ProxyAttributeSet {
                         Utils.invoke(v, "setMeasureWithLargestChildEnabled", new Class[]{boolean.class}, Boolean.parseBoolean(value));
                         continue;
                     case "textStyle": {
-                        int style = Integer.parseInt(parseFlag(name, value));
+                        int style = Integer.parseInt(value);
                         Typeface tf = (Typeface) Utils.invoke(v, "getTypeface", null);
                         Utils.invoke(v, "setTypeface", new Class[]{Typeface.class, int.class}, tf, style);
                         continue;
@@ -950,7 +950,6 @@ public class ProxyAttributeSet {
         //暂时不考虑引用资源的情况
         switch (name) {
             //返回原来的值
-            case "gravity":
             case "layout":
             case "src":
             case "textAppearance":
@@ -987,7 +986,6 @@ public class ProxyAttributeSet {
             case "textOff":
             case "textOn":
             case "adjustViewBounds":
-            case "inputType":
             case "shadowColor":
             case "shadowDx":
             case "shadowDy":
@@ -1030,7 +1028,6 @@ public class ProxyAttributeSet {
             case "layout_alignParentStart":
             case "layout_alignParentTop":
             case "text":
-            case "textStyle":
             case "alpha":
             case "background":
             case "clickable":
@@ -1100,6 +1097,9 @@ public class ProxyAttributeSet {
             case "foregroundGravity":
             case "requiresFadingEdge":
             case "scrollbars":
+            case "gravity":
+            case "inputType":
+            case "textStyle":
                 return parseFlag(name, value);
             case "fadingEdgeLength":
             case "layout_margin":
