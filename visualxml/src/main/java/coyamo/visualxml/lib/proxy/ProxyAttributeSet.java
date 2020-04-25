@@ -1,5 +1,19 @@
 package coyamo.visualxml.lib.proxy;
+/**
+ * Copyright (C) 2020 Coyamo
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -23,6 +37,8 @@ import java.util.Map;
 import coyamo.visualxml.lib.parser.AndroidXmlParser;
 import coyamo.visualxml.lib.utils.MessageArray;
 import coyamo.visualxml.lib.utils.Utils;
+
+@SuppressLint("RtlHardcoded")
 public class ProxyAttributeSet {
     //attr中的枚举值与实际需要的参数的映射
     private static Map<String, Map<String, String>> enumMap = new HashMap<>();
@@ -152,6 +168,7 @@ public class ProxyAttributeSet {
     //还没有想到合适的文件结构储存这些关系
     //只能写死在代码里面(•́ω•̀ ٥)
 
+
     static {
 
         Map<String, Integer> textStyleMap = new HashMap<>();
@@ -159,6 +176,7 @@ public class ProxyAttributeSet {
         textStyleMap.put("normal", 0);
         textStyleMap.put("bold", 1);
         textStyleMap.put("italic", 2);
+
         Map<String, Integer> inputTypeMap = new HashMap<>();
         flagMap.put("inputType", inputTypeMap);
         inputTypeMap.put("none", 0x00000000);
@@ -208,7 +226,7 @@ public class ProxyAttributeSet {
         fadingEdgeMap.put("vertical", 0x00002000);
 
         Map<String, Integer> gravityMap = new HashMap<>();
-        //flagMap.put("gravity", gravityMap);
+        flagMap.put("gravity", gravityMap);
         flagMap.put("layout_gravity", gravityMap);
         flagMap.put("foregroundGravity", gravityMap);
         gravityMap.put("top", Gravity.TOP);
@@ -343,38 +361,38 @@ public class ProxyAttributeSet {
                             Utils.invoke(v.getLayoutParams(), "addRule", new Class[]{int.class}, RelativeLayout.ALIGN_PARENT_TOP);
                         continue;
                     case "layout_margin":
-                        int layout_margin = (int) Float.parseFloat(value);
+                        int layout_margin = Integer.parseInt(value);
                         Utils.invoke(v.getLayoutParams(), "setMargins", new Class[]{int.class, int.class, int.class, int.class}, layout_margin, layout_margin, layout_margin, layout_margin);
                         continue;
                     case "layout_marginStart":
                         if (!hasAttribute("layout_margin"))
-                            Utils.invoke(v.getLayoutParams(), "setMarginStart", new Class[]{int.class}, (int) Float.parseFloat(value));
+                            Utils.invoke(v.getLayoutParams(), "setMarginStart", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
                     case "layout_marginEnd":
                         if (!hasAttribute("layout_margin"))
-                            Utils.invoke(v.getLayoutParams(), "setMarginEnd", new Class[]{int.class}, (int) Float.parseFloat(value));
+                            Utils.invoke(v.getLayoutParams(), "setMarginEnd", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
                     case "layout_marginBottom":
                         if (!hasAttribute("layout_margin"))
-                            Utils.setField(v.getLayoutParams(), "bottomMargin", (int) Float.parseFloat(value));
+                            Utils.setField(v.getLayoutParams(), "bottomMargin", Integer.parseInt(value));
                         continue;
                     case "layout_marginTop":
                         if (!hasAttribute("layout_margin"))
-                            Utils.setField(v.getLayoutParams(), "topMargin", (int) Float.parseFloat(value));
+                            Utils.setField(v.getLayoutParams(), "topMargin", Integer.parseInt(value));
                         continue;
                     case "layout_marginLeft":
                         if (!hasAttribute("layout_margin"))
-                            Utils.setField(v.getLayoutParams(), "leftMargin", (int) Float.parseFloat(value));
+                            Utils.setField(v.getLayoutParams(), "leftMargin", Integer.parseInt(value));
                         continue;
                     case "layout_marginRight":
                         if (!hasAttribute("layout_margin"))
-                            Utils.setField(v.getLayoutParams(), "rightMargin", (int) Float.parseFloat(value));
+                            Utils.setField(v.getLayoutParams(), "rightMargin", Integer.parseInt(value));
                         continue;
                     case "layout_width":
-                        Utils.setField(v.getLayoutParams(), "width", (int) Float.parseFloat(value));
+                        Utils.setField(v.getLayoutParams(), "width", Integer.parseInt(value));
                         continue;
                     case "layout_height":
-                        Utils.setField(v.getLayoutParams(), "height", (int) Float.parseFloat(value));
+                        Utils.setField(v.getLayoutParams(), "height", Integer.parseInt(value));
                         continue;
                     case "layout_weight":
                         Utils.setField(v.getLayoutParams(), "weight", Float.parseFloat(value));
@@ -400,10 +418,10 @@ public class ProxyAttributeSet {
                         Utils.invoke(v, "setOrientation", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
                     case "width":
-                        Utils.invoke(v, "setWidth", new Class[]{int.class}, (int) Float.parseFloat(value));
+                        Utils.invoke(v, "setWidth", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
                     case "height":
-                        Utils.invoke(v, "setHeight", new Class[]{int.class}, (int) Float.parseFloat(value));
+                        Utils.invoke(v, "setHeight", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
                     case "maxEms":
                         Utils.invoke(v, "setMaxEms", new Class[]{int.class}, Integer.parseInt(value));
@@ -421,22 +439,22 @@ public class ProxyAttributeSet {
                         Utils.invoke(v, "setMaxLines", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
                     case "maxWidth":
-                        Utils.invoke(v, "setMaxWidth", new Class[]{int.class}, (int) Float.parseFloat(value));
+                        Utils.invoke(v, "setMaxWidth", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
                     case "minEms":
                         Utils.invoke(v, "setMinEms", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
                     case "minHeight":
-                        Utils.invoke(v, "setMinHeight", new Class[]{int.class}, (int) Float.parseFloat(value));
+                        Utils.invoke(v, "setMinHeight", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
                     case "minLines":
                         Utils.invoke(v, "setMinLines", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
                     case "minWidth":
-                        Utils.invoke(v, "setMinWidth", new Class[]{int.class}, (int) Float.parseFloat(value));
+                        Utils.invoke(v, "setMinWidth", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
                     case "maxHeight":
-                        Utils.invoke(v, "setMaxHeight", new Class[]{int.class}, (int) Float.parseFloat(value));
+                        Utils.invoke(v, "setMaxHeight", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
                     case "singleLine":
                         Utils.invoke(v, "setSingleLine", new Class[]{boolean.class}, Boolean.parseBoolean(value));
@@ -463,7 +481,7 @@ public class ProxyAttributeSet {
                         Utils.invoke(v, "setTextSize", new Class[]{int.class, float.class}, TypedValue.COMPLEX_UNIT_PX, Float.parseFloat(value));
                         continue;
                     case "padding": {
-                        int p = (int) Float.parseFloat(value);
+                        int p = Integer.parseInt(value);
                         Utils.invoke(v, "setPadding", new Class[]{int.class, int.class, int.class, int.class}, p, p, p, p);
                         continue;
                     }
@@ -472,7 +490,7 @@ public class ProxyAttributeSet {
                         int top = (int) Utils.invoke(v, "getPaddingTop", null);
                         int right = (int) Utils.invoke(v, "getPaddingRight", null);
                         int bottom = (int) Utils.invoke(v, "getPaddingBottom", null);
-                        Utils.invoke(v, "setPadding", new Class[]{int.class, int.class, int.class, int.class}, (int) Float.parseFloat(value), top, right, bottom);
+                        Utils.invoke(v, "setPadding", new Class[]{int.class, int.class, int.class, int.class}, Integer.parseInt(value), top, right, bottom);
                         continue;
                     }
                     case "paddingStart": {
@@ -480,7 +498,7 @@ public class ProxyAttributeSet {
                         int top = (int) Utils.invoke(v, "getPaddingTop", null);
                         int bottom = (int) Utils.invoke(v, "getPaddingBottom", null);
                         int end = (int) Utils.invoke(v, "getPaddingEnd", null);
-                        Utils.invoke(v, "setPaddingRelative", new Class[]{int.class, int.class, int.class, int.class}, (int) Float.parseFloat(value), top, end, bottom);
+                        Utils.invoke(v, "setPaddingRelative", new Class[]{int.class, int.class, int.class, int.class}, Integer.parseInt(value), top, end, bottom);
                         continue;
                     }
                     case "paddingRight": {
@@ -488,7 +506,7 @@ public class ProxyAttributeSet {
                         int left = (int) Utils.invoke(v, "getPaddingLeft", null);
                         int top = (int) Utils.invoke(v, "getPaddingTop", null);
                         int bottom = (int) Utils.invoke(v, "getPaddingBottom", null);
-                        Utils.invoke(v, "setPadding", new Class[]{int.class, int.class, int.class, int.class}, left, top, (int) Float.parseFloat(value), bottom);
+                        Utils.invoke(v, "setPadding", new Class[]{int.class, int.class, int.class, int.class}, left, top, Integer.parseInt(value), bottom);
                         continue;
                     }
                     case "paddingEnd": {
@@ -496,7 +514,7 @@ public class ProxyAttributeSet {
                         int top = (int) Utils.invoke(v, "getPaddingTop", null);
                         int bottom = (int) Utils.invoke(v, "getPaddingBottom", null);
                         int start = (int) Utils.invoke(v, "getPaddingStart", null);
-                        Utils.invoke(v, "setPaddingRelative", new Class[]{int.class, int.class, int.class, int.class}, start, top, (int) Float.parseFloat(value), bottom);
+                        Utils.invoke(v, "setPaddingRelative", new Class[]{int.class, int.class, int.class, int.class}, start, top, Integer.parseInt(value), bottom);
                         continue;
                     }
                     case "paddingTop": {
@@ -504,7 +522,7 @@ public class ProxyAttributeSet {
                         int left = (int) Utils.invoke(v, "getPaddingLeft", null);
                         int right = (int) Utils.invoke(v, "getPaddingRight", null);
                         int bottom = (int) Utils.invoke(v, "getPaddingBottom", null);
-                        Utils.invoke(v, "setPadding", new Class[]{int.class, int.class, int.class, int.class}, left, (int) Float.parseFloat(value), right, bottom);
+                        Utils.invoke(v, "setPadding", new Class[]{int.class, int.class, int.class, int.class}, left, Integer.parseInt(value), right, bottom);
                         continue;
                     }
                     case "paddingBottom": {
@@ -512,7 +530,7 @@ public class ProxyAttributeSet {
                         int left = (int) Utils.invoke(v, "getPaddingLeft", null);
                         int top = (int) Utils.invoke(v, "getPaddingTop", null);
                         int right = (int) Utils.invoke(v, "getPaddingRight", null);
-                        Utils.invoke(v, "setPadding", new Class[]{int.class, int.class, int.class, int.class}, left, top, right, (int) Float.parseFloat(value));
+                        Utils.invoke(v, "setPadding", new Class[]{int.class, int.class, int.class, int.class}, left, top, right, Integer.parseInt(value));
                         continue;
                     }
                     case "rotation":
@@ -592,7 +610,7 @@ public class ProxyAttributeSet {
                         Utils.invoke(v, "setAdjustViewBounds", new Class[]{boolean.class}, Boolean.parseBoolean(value));
                         continue;
                     case "baseLine":
-                        Utils.invoke(v, "setBaseline", new Class[]{int.class}, (int) Float.parseFloat(value));
+                        Utils.invoke(v, "setBaseline", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
                     case "scaleType":
                         Utils.invoke(v, "setScaleType", new Class[]{ImageView.ScaleType.class}, ImageView.ScaleType.valueOf(value));
@@ -617,13 +635,13 @@ public class ProxyAttributeSet {
                             Utils.invoke(v, "setEnabled", new Class[]{boolean.class}, Boolean.parseBoolean(value));
                         continue;
                     case "switchMinWidth":
-                        Utils.invoke(v, "setSwitchMinWidth", new Class[]{int.class}, (int) Float.parseFloat(value));
+                        Utils.invoke(v, "setSwitchMinWidth", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
                     case "switchPadding":
-                        Utils.invoke(v, "setSwitchPadding", new Class[]{int.class}, (int) Float.parseFloat(value));
+                        Utils.invoke(v, "setSwitchPadding", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
                     case "thumbTextPadding":
-                        Utils.invoke(v, "setThumbTextPadding", new Class[]{int.class}, (int) Float.parseFloat(value));
+                        Utils.invoke(v, "setThumbTextPadding", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
                     case "clipChildren":
                         Utils.invoke(v, "setClipChildren", new Class[]{boolean.class}, Boolean.parseBoolean(value));
@@ -818,7 +836,6 @@ public class ProxyAttributeSet {
                     case "layout_gravity":
                         Utils.setField(v.getLayoutParams(), "gravity", Integer.parseInt(value));
                         continue;
-
                     case "longClickable":
                         Utils.invoke(v, "setLongClickable", new Class[]{boolean.class}, Boolean.parseBoolean(value));
                         continue;
@@ -839,7 +856,7 @@ public class ProxyAttributeSet {
                         continue;
                     case "onClick":
                         //do nothing
-                        return;
+                        continue;
                     case "overScrollMode":
                         Utils.invoke(v, "setOverScrollMode", new Class[]{int.class}, Integer.parseInt(value));
                         continue;
@@ -921,7 +938,7 @@ public class ProxyAttributeSet {
                         continue;
                     case "verticalScrollbarPosition":
                         Utils.invoke(v, "setVerticalScrollbarPosition", new Class[]{int.class}, Integer.parseInt(value));
-                        continue;
+                        //continue;
 
                 }
         }
@@ -1142,6 +1159,7 @@ public class ProxyAttributeSet {
 
     private String parseEnum(String name, String value, String def) {
         Map<String, String> map = enumMap.get(name);
+        assert map != null;
         if (map.containsKey(value))
             return map.get(value);
         return def;
@@ -1150,6 +1168,7 @@ public class ProxyAttributeSet {
     private String parseFlag(String name, String value) {
         // xx或xx|xx...或xx|,不允许xx||
         Map<String, Integer> map = flagMap.get(name);
+        assert map != null;
         if (!value.contains("|")) {
             return String.valueOf(map.get(value));
         }
@@ -1162,7 +1181,6 @@ public class ProxyAttributeSet {
                 if (flag == -1) {
                     flag = v;
                 } else {
-                    //不太确定是否所有flag都是这么|的(•́ω•̀ ٥)
                     flag |= v;
                 }
             } else {
@@ -1172,7 +1190,7 @@ public class ProxyAttributeSet {
         return String.valueOf(flag);
     }
 
-    public String parseUnitString2Px(String unitString) {
+    private String parseUnitString2Px(String unitString) {
         //xml支持的单位
         String[] suffixs = {"sp", "dp", "dip", "pt", "px", "mm", "in"};
         unitString = unitString.trim();
@@ -1209,7 +1227,7 @@ public class ProxyAttributeSet {
         return null;
     }
 
-    public int getAttributeCount() {
+    private int getAttributeCount() {
         return mParser.getAttributeCount();
     }
 
@@ -1217,16 +1235,16 @@ public class ProxyAttributeSet {
         return mParser.getAttributeNamespace(index);
     }
 
-    public String getAttributeName(int index) {
+    private String getAttributeName(int index) {
         return mParser.getAttributeName(index);
     }
 
-    public String getAttributeValue(int index) {
+    private String getAttributeValue(int index) {
         //转换
         return parseRowAttributeValue(getAttributeName(index), mParser.getAttributeValue(index));
     }
 
-    public String getAttributeValue(String namespace, String name) {
+    private String getAttributeValue(String namespace, String name) {
         //转换
         return parseRowAttributeValue(name, mParser.getAttributeValue(namespace, name));
     }
@@ -1235,11 +1253,11 @@ public class ProxyAttributeSet {
         return mParser.getPositionDescription();
     }
 
-    public boolean hasAttribute(String name) {
+    private boolean hasAttribute(String name) {
         return mParser.getAttributeValue(AndroidXmlParser.ANDROID_NS, name) != null;
     }
 
-    public String toIntString(String str) {
+    private String toIntString(String str) {
         if (str.contains(".")) return str.substring(0, str.lastIndexOf("."));
         return str;
     }
